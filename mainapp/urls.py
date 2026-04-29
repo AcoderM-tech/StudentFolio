@@ -19,6 +19,6 @@ urlpatterns = [
     path('dashboard/certificates/add/', views.add_certificate, name='add_certificate'),
     path('dashboard/achievements/add/', views.add_achievement, name='add_achievement'),
     path('dashboard/experiences/add/', views.add_ish, name='add_experience'),
-    path('/dashboard/projects/edit/<int:pk>/', views.edit_project, name='edit_project'),
+    path('dashboard/projects/edit/<int:pk>/', views.edit_project, name='edit_project'),
 ]
 
