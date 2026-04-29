@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudentFolio — Sizning raqamli kelajagingiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #0d6efd; --bg-soft: #f8faff; }
+        body { font-family: 'Inter', sans-serif; color: #212529; scroll-behavior: smooth; }
+
+        .hero-section { padding: 120px 0; background: radial-gradient(circle at 10% 20%, rgba(13, 110, 253, 0.05) 0%, rgba(255, 255, 255, 1) 90%); }
+
+        /* Rasmlar uchun maxsus stil */
+        .showcase-img { border-radius: 25px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); transition: 0.4s; width: 100%; }
+        .showcase-img:hover { transform: translateY(-10px); }
+
+        .feature-card { border: none; border-radius: 20px; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.03); transition: 0.3s; }
+        .feature-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+
+        .process-step { position: relative; padding: 40px; border-radius: 20px; background: var(--bg-soft); }
+        .step-num { position: absolute; top: -15px; left: 20px; width: 40px; height: 40px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+        .section-title { font-weight: 800; margin-bottom: 50px; }
+        .bg-dark-section { background: #0a0c10; color: white; padding: 100px 0; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary fs-3" href="#">StudentFolio</a>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="#how-it-works">Qanday ishlaydi?</a></li>
+                    <li class="nav-item"><a class="nav-link fw-semibold" href="#features">Imkoniyatlar</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary px-4" href="/login">Kirish</a></li>
+                    <li class="nav-item"><a class="btn btn-primary text-white px-4 shadow-sm" href="/register">Ro'yxatdan o'tish</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <span class="badge bg-primary-soft text-primary mb-3 fw-bold px-3 py-2" style="background: rgba(13, 110, 253, 0.1);">O'zbekiston talabalari uchun №1 platforma</span>
+                    <h1 class="display-3 fw-extrabold mb-4">Muvaffaqiyatingizni <span class="text-primary">vizuallashtiring</span></h1>
+                    <p class="lead mb-5 text-muted fs-4">Faqatgina quruq CV emas, balki real loyihalaringizni jonli ko'rsatuvchi raqamli pasportga ega bo'ling.</p>
+                    <div class="d-flex gap-3">
+                        <a href="/register" class="btn btn-primary btn-lg px-5 py-3 shadow">Hozir boshlash</a>
+                        <a href="about" class="btn btn-light btn-lg border px-4">Biz haqimizda</a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <img src="https://img.freepik.com/free-vector/digital-lifestyle-concept-illustration_114360-7337.jpg" alt="Portfolio Dashboard" class="showcase-img">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="how-it-works" class="py-5">
+        <div class="container py-5">
+            <div class="text-center mb-5">
+                <h2 class="section-title fs-1">3 ta oson qadamda professional bo'ling</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="process-step h-100">
+                        <div class="step-num">1</div>
+                        <h4 class="fw-bold mt-3">Profilni sozlang</h4>
+                        <p class="text-muted">Universitet, yo'nalish va ko'nikmalaringizni kiriting. Tizim sizga mos dizaynni tanlaydi.</p>
+                        <img src="https://img.freepik.com/free-vector/fill-out-concept-illustration_114360-5450.jpg" class="img-fluid rounded mt-3" alt="Step 1">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="process-step h-100">
+                        <div class="step-num">2</div>
+                        <h4 class="fw-bold mt-3">Loyihalarni yuklang</h4>
+                        <p class="text-muted">GitHub linklari yoki rasmlar orqali bajargan ishlaringizni bitta joyga jamlang.</p>
+                        <img src="https://img.freepik.com/free-vector/upload-concept-illustration_114360-1205.jpg" class="img-fluid rounded mt-3" alt="Step 2">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="process-step h-100">
+                        <div class="step-num">3</div>
+                        <h4 class="fw-bold mt-3">Linkni ulashing</h4>
+                        <p class="text-muted">Tayyor portfoliongizni HR menejerlar va do'stlaringizga yagona havola orqali yuboring.</p>
+                        <img src="https://img.freepik.com/free-vector/share-concept-illustration_114360-2641.jpg" class="img-fluid rounded mt-3" alt="Step 3">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-5 bg-soft">
+        <div class="container py-5">
+            <div class="row align-items-center mb-5 pb-5">
+                <div class="col-lg-6 mb-4">
+                    <img src="https://img.freepik.com/free-vector/online-cv-concept-illustration_114360-5161.jpg" class="showcase-img" alt="CV Builder">
+                </div>
+                <div class="col-lg-6 ps-lg-5">
+                    <h2 class="fw-bold display-5 mb-4">Avtomatik CV Generatori</h2>
+                    <p class="text-muted fs-5">Siz kiritgan barcha loyiha va yutuqlar asosida tizimimiz professional PDF rezyume tayyorlab beradi. Har safar CV-ni qaytadan yozishga hojat yo'q!</p>
+                    <ul class="list-unstyled mt-4">
+                        <li class="mb-3 fs-5"><i class="bi bi-check-circle-fill text-primary me-2"></i> 5+ xil dizayn variantlari</li>
+                        <li class="mb-3 fs-5"><i class="bi bi-check-circle-fill text-primary me-2"></i> ATS-friendly (Ish beruvchi tizimlariga mos)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row align-items-center">
+                <div class="col-lg-6 order-lg-2 mb-4">
+                    <img src="https://img.freepik.com/free-vector/scrum-board-concept-illustration_114360-1555.jpg" class="showcase-img" alt="Project Management">
+                </div>
+                <div class="col-lg-6 pe-lg-5 order-lg-1">
+                    <h2 class="fw-bold display-5 mb-4">Loyihalar Vizualizatsiyasi</h2>
+                    <p class="text-muted fs-5">Faqat nomlar emas, balki jonli skrinshotlar va GitHub integratsiyasi orqali ish beruvchilarga real natijalaringizni ko'rsating.</p>
+                    <div class="card feature-card p-4 mt-4">
+                        <h5 class="fw-bold"><i class="bi bi-github me-2"></i> GitHub Integratsiyasi</h5>
+                        <p class="text-muted mb-0">Repozitariylaringizdagi yutuqlarni avtomatik profilga tortib oling.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-dark-section text-center">
+        <div class="container">
+            <h2 class="display-4 fw-bold mb-4">Talabalik davringizni raqamlashtirishga tayyormisiz?</h2>
+            <p class="lead mb-5 opacity-75">Siz bilan birga minglab talabalar o'z karyerasini qurishni boshladi.</p>
+            <a href="/register" class="btn btn-primary btn-lg px-5 py-3 fw-bold rounded-pill shadow-lg">
+                Hozir bepul qo'shiling
+            </a>
+        </div>
+    </section>
+
+    <footer class="py-5 bg-white">
+        <div class="container text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <h3 class="fw-bold text-primary mb-3">StudentFolio</h3>
+                    <p class="text-muted">Toshkent Axborot Texnologiyalari Universiteti (TUIT) talabalari tomonidan ishlab chiqilgan.</p>
+                    <div class="d-flex justify-content-center gap-3 my-4">
+                        <a href="#" class="text-dark fs-4"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="text-dark fs-4"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-dark fs-4"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                    <hr>
+                    <p class="small text-secondary">
+                        &copy; 2026 StudentFolio. Django Framework va Bootstrap 5 yordamida yaratildi.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

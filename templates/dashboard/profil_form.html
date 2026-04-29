@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold text-primary">Profil ma'lumotlari</h2>
+                    <p class="text-muted">Platformada talabalik portfoliongizni to'liq ko'rsatish uchun ma'lumotlarni to'ldiring.</p>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="row g-4">
+                        <div class="col-12 text-center mb-3">
+                            <div class="position-relative d-inline-block">
+                                <img id="preview" src="{% if form.instance.avatar %}{{ form.instance.avatar.url }}{% else %}https://via.placeholder.com/120{% endif %}"
+                                     class="rounded-circle border" width="120" height="120" style="object-fit: cover;">
+                                <label for="id_avatar" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-2" style="cursor: pointer;">
+                                    <i class="bi bi-camera-fill"></i>
+                                </label>
+                                <input type="file" name="avatar" id="id_avatar" class="d-none" onchange="previewImage(this)">
+                            </div>
+                            <p class="small text-muted mt-2">Profil rasmini o'zgartirish</p>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase">Ism</label>
+                            <input type="text" name="ism" class="form-control rounded-3 py-2" value="{{ form.ism.value|default:'' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase">Familiya</label>
+                            <input type="text" name="familiya" class="form-control rounded-3 py-2" value="{{ form.familiya.value|default:'' }}" required>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="form-label small fw-bold text-uppercase">Universitet</label>
+                            <input type="text" name="university" class="form-control rounded-3 py-2" placeholder="Masalan: TATU" value="{{ form.university.value|default:'' }}">
+                        </div>
+                        <div class="col-md-8">
+                            <label class="form-label small fw-bold text-uppercase">Fakultet</label>
+                            <input type="text" name="fakultet" class="form-control rounded-3 py-2" placeholder="Masalan: Kompyuter injiniringi" value="{{ form.fakultet.value|default:'' }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-uppercase">Kurs</label>
+                            <select name="kurs" class="form-select rounded-3 py-2">
+                                <option value="1" {% if form.kurs.value == 1 %}selected{% endif %}>1-kurs</option>
+                                <option value="2" {% if form.kurs.value == 2 %}selected{% endif %}>2-kurs</option>
+                                <option value="3" {% if form.kurs.value == 3 %}selected{% endif %}>3-kurs</option>
+                                <option value="4" {% if form.kurs.value == 4 %}selected{% endif %}>4-kurs</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small fw-bold text-uppercase">GPA Reyting</label>
+                            <input type="number" step="0.01" name="gpa" class="form-control rounded-3 py-2" placeholder="Masalan: 4.4" value="{{ form.gpa.value|default:'' }}">
+                        </div>
+
+                        <div class="col-12 mt-5">
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
+                                Ma'lumotlarni saqlash
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-link w-100 text-decoration-none mt-2 text-muted small">
+                                Bekor qilish
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+{% endblock %}

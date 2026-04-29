@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biz haqimizda — StudentFolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        :root { --primary-color: #0d6efd; --secondary-bg: #fdfdfd; }
+        body { font-family: 'Inter', sans-serif; color: #333; line-height: 1.6; }
+
+        /* Hero Section */
+        .about-hero { padding: 120px 0 80px; background-color: #ffffff; position: relative; overflow: hidden; }
+        .about-hero::after { content: ''; position: absolute; top: 0; right: 0; width: 40%; height: 100%; background: rgba(13, 110, 253, 0.03); border-radius: 0 0 0 100%; z-index: 0; }
+
+        /* Cards & Sections */
+        .mission-card { border: none; border-radius: 25px; padding: 40px; background: #fff; box-shadow: 0 20px 40px rgba(0,0,0,0.05); height: 100%; }
+        .value-icon { width: 50px; height: 50px; background: var(--primary-color); color: white; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 20px; }
+
+        .timeline { border-left: 3px solid #eee; padding-left: 30px; position: relative; }
+        .timeline-item { position: relative; margin-bottom: 50px; }
+        .timeline-item::before { content: ''; position: absolute; left: -38.5px; top: 0; width: 14px; height: 14px; background: var(--primary-color); border-radius: 50%; border: 3px solid #fff; }
+
+        .team-section { background-color: var(--secondary-bg); padding: 100px 0; }
+        .profile-img { width: 100px; height: 100px; object-fit: cover; border-radius: 20px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary fs-3" href="/">StudentFolio</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link fw-semibold px-3" href="/">Asosiy</a>
+                <a class="btn btn-primary text-white px-4 ms-lg-3 rounded-pill" href="/register">Hozir qo'shiling</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="about-hero">
+        <div class="container position-relative" style="z-index: 1;">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="display-3 fw-extrabold mb-4">Biz talabalar salohiyatini <span class="text-primary">dunyoga ko'rsatamiz</span></h1>
+                    <p class="lead text-muted mb-0">StudentFolio — bu shunchaki startap emas. Bu O'zbekiston oliy ta'lim tizimidagi talabalar uchun yangi imkoniyatlar eshigi, raqamli hamjamiyat va professional o'sish maydonidir.</p>
+                </div>
+                <div class="col-lg-5">
+                    <img src="https://img.freepik.com/free-vector/shared-goals-concept-illustration_114360-5114.jpg" class="img-fluid" alt="Our Vision">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5 bg-light">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="mission-card">
+                        <div class="value-icon"><i class="bi bi-rocket-takeoff"></i></div>
+                        <h2 class="fw-bold">Bizning Missiyamiz</h2>
+                        <p class="text-muted fs-5">Har bir talabaning akademik va amaliy yutuqlarini yagona, professional va tan olinadigan raqamli formatga o'tkazish. Biz ta'lim va martaba o'rtasidagi "ko'prik" vazifasini bajaramiz.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mission-card">
+                        <div class="value-icon"><i class="bi bi-eye"></i></div>
+                        <h2 class="fw-bold">Bizning Vizyonimiz</h2>
+                        <p class="text-muted fs-5">2027-yilga qadar O'zbekistonning barcha OTMLarida talabalar portfoliosi bo'yicha yagona standartga aylanish va mahalliy kadrlarimizni xalqaro darajaga olib chiqish.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-5">
+                    <h2 class="display-5 fw-bold mb-4">G'oyadan — <br><span class="text-primary">Real loyihagacha</span></h2>
+                    <p class="text-muted mb-5">StudentFolio qanday qilib oddiy talaba ehtiyojidan professional tizimga aylangani haqida qisqacha.</p>
+                    <img src="https://img.freepik.com/free-vector/launching-concept-illustration_114360-1594.jpg" class="img-fluid rounded-4 mb-4 mb-lg-0" alt="History">
+                </div>
+                <div class="col-lg-6 offset-lg-1">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <h5 class="fw-bold text-primary">2025: Muammoni aniqlash</h5>
+                            <p class="text-muted">TUIT (TATU) talabalari orasida o'tkazilgan so'rovnomada 80% talabalar o'z loyihalarini taqdim etishda qiynalishi aniqlandi.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5 class="fw-bold text-primary">2026 Yanvar: Birinchi prototip</h5>
+                            <p class="text-muted">Django va React texnologiyalari yordamida "StudentFolio 1.0" versiyasi ishlab chiqildi va sinovdan o'tkazildi.</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h5 class="fw-bold text-primary">Bugun: Kengayish</h5>
+                            <p class="text-muted">Hozirda tizim minglab foydalanuvchilarga xizmat ko'rsatmoqda va universitetlar bilan integratsiya jarayonida.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold display-5">Bizning tamoyillarimiz</h2>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4 text-center p-4">
+                    <i class="bi bi-shield-check fs-1 text-primary mb-3"></i>
+                    <h4 class="fw-bold">Ma'lumotlar xavfsizligi</h4>
+                    <p class="text-muted">Sizning barcha ma'lumotlaringiz va yuklangan fayllaringiz zamonaviy xavfsizlik standartlari asosida himoyalangan.</p>
+                </div>
+                <div class="col-md-4 text-center p-4">
+                    <i class="bi bi-cpu fs-1 text-primary mb-3"></i>
+                    <h4 class="fw-bold">Texnologik yondashuv</h4>
+                    <p class="text-muted">Biz eng so'nggi algoritmlardan foydalanamiz, bu esa portfolioning tez yuklanishi va qulay interfeysini ta'minlaydi.</p>
+                </div>
+                <div class="col-md-4 text-center p-4">
+                    <i class="bi bi-heart fs-1 text-primary mb-3"></i>
+                    <h4 class="fw-bold">Talaba-markazli</h4>
+                    <p class="text-muted">Har bir yangilanishni talabalarning fikri va takliflari asosida amalga oshiramiz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container py-5">
+            <div class="card border-0 bg-primary p-5 text-center text-white rounded-5 shadow-lg">
+                <h2 class="display-4 fw-bold mb-4">Siz ham jamoamizning bir qismiga aylaning</h2>
+                <p class="lead mb-5 opacity-75">Kelajagingizni bugundan qurishni boshlang.</p>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/register" class="btn btn-light btn-lg px-5 py-3 fw-bold text-primary">Ro'yxatdan o'tish</a>
+                    <a href="/contact" class="btn btn-outline-light btn-lg px-5 py-3">Aloqa</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-5 border-top">
+        <div class="container text-center">
+            <p class="text-muted mb-0">&copy; 2026 StudentFolio. O'zbekiston talabalari uchun yaratilgan.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

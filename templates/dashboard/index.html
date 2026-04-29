@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon-box bg-primary text-white"><i class="bi bi-code-square"></i></div>
+            <p class="text-muted small fw-bold mb-1 text-uppercase">Loyihalar</p>
+            <h3 class="fw-800 mb-0">{{ l_soni| default:"0" }}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon-box bg-warning text-white"><i class="bi bi-star"></i></div>
+            <p class="text-muted small fw-bold mb-1 text-uppercase">Sertifikatlar</p>
+            <h3 class="fw-800 mb-0">{{ s_soni | default:"0"}}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon-box bg-info text-white"><i class="bi bi-eye"></i></div>
+            <p class="text-muted small fw-bold mb-1 text-uppercase">Tashriflar</p>
+            <h3 class="fw-800 mb-0">{{t_soni | default:"0"}}</h3>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="icon-box bg-success text-white"><i class="bi bi-graph-up-arrow"></i></div>
+            <p class="text-muted small fw-bold mb-1 text-uppercase">GPA Reyting</p>
+            <h3 class="fw-800 mb-0">{{ profil.gpa }}</h3>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="stat-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">Oxirgi loyihalar</h5>
+                <a href="{% url 'projects' %}" class="btn btn-sm btn-light border rounded-pill px-3">Barchasi</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-borderless align-middle">
+                    <thead class="text-muted small">
+                        <tr>
+                            <th>LOYIHA NOMI</th>
+                            <th>SANA</th>
+                            <th>STATUS</th>
+                            <th>HARAKAT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loyiha in loyihalar %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-3 bg-light me-3" style="width: 40px; height: 40px; background-image: url('{{ loyiha.avatar.url }}'); background-size: cover;"></div>
+                                    <span class="fw-semibold">{{ loyiha.nomi }}</span>
+                                </div>
+                            </td>
+                            <td class="text-muted small">{{ loyiha.yaratilgan_sana|date:"d.m.Y" }}</td>
+                            <td><span class="badge bg-soft-success text-success rounded-pill px-3" style="background: rgba(25, 135, 84, 0.1);">{{ loyiha.get_status_display }}</span></td>
+                            <td><button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-three-dots"></i></button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="stat-card text-center">
+            <div class="position-relative d-inline-block mb-3">
+                <img src="{{ profil.avatar.url }}" class="rounded-circle border" width="100" height="100" style="object-fit: cover;">
+                <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle" style="width: 15px; height: 15px;"></span>
+            </div>
+            <h5 class="fw-bold mb-1">{{ profil.ism }} {{ profil.familiya }}</h5>
+            <p class="text-muted small mb-4">{{ profil.fakultet }} | {{ profil.kurs }}-kurs</p>
+
+            <div class="bg-light rounded-4 p-3 mb-4 text-start small">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Universitet:</span>
+                    <span class="fw-bold">{{ profil.university }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">ID:</span>
+                    <span class="fw-bold">#{{ profil.id }}</span>
+                </div>
+            </div>
+            <a href="{% url 'profil_form'  %}" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">Profilni tahrirlash</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
