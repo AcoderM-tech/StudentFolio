@@ -20,5 +20,12 @@ urlpatterns = [
     path('dashboard/achievements/add/', views.add_achievement, name='add_achievement'),
     path('dashboard/experiences/add/', views.add_ish, name='add_experience'),
     path('dashboard/projects/edit/<int:pk>/', views.edit_project, name='edit_project'),
+    path('dashboard/projects/delete/<int:pk>/', views.del_project, name='del_project'),
+    path('dashboard/experiences/delete/<int:pk>/', views.del_job, name='delete_experience'),
+    path('dashboard/experiences/edit/<int:pk>/', views.edit_job, name='edit_experience'),
+    path('dashboard/achievements/edit/<int:pk>/', views.edit_achievement, name='edit_achievement'),
+    path('dashboard/achievements/delete/<int:pk>/', views.delete_achievement, name='delete_achievement'),
+    path('dashboard/certificates/edit/<int:pk>/', views.edit_certificate, name='edit_certificate'),
+    path('dashboard/certificates/delete/<int:pk>/', views.delete_certificate, name='delete_certificate'),
 ]
 

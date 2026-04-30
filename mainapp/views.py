@@ -96,8 +96,6 @@ def profil_form(request):
     }
     return render(request, 'dashboard/profil_form.html', context)
 @login_required(login_url='/login/')
-
-
 def dashboard(request):
     try:
       user_profil=Profil.objects.get(user=request.user)
@@ -116,8 +114,6 @@ def dashboard(request):
     }
     return render(request,'dashboard/index.html',context)
 @login_required(login_url='/login/')
-
-
 def project_view(request):
      try:
         user_profil = Profil.objects.get(user=request.user)
@@ -153,6 +149,7 @@ def yutuqlar_view(request):
         return redirect('profil_form')
     yutuqlar=Tadbirlar_va_yutuqlar.objects.filter(profil__user=request.user).order_by('-yuklangan_sanasi')
     return render(request,'dashboard/achievements.html',{'achievements':yutuqlar,'profil':user_profil})
+@login_required(login_url='/login/')
 def ish_view(request):
     try:
         user_profil = Profil.objects.get(user=request.user)
@@ -198,7 +195,7 @@ def add_projects(request):
     return redirect('projects')
 
 
-@login_required
+@login_required(login_url='/login/')
 def add_certificate(request):
     try:
         user_profil = Profil.objects.get(user=request.user)
@@ -222,7 +219,7 @@ def add_certificate(request):
     return redirect('certificates')
 
 
-@login_required
+@login_required(login_url='/login/')
 def add_achievement(request):
     try:
         user_profil = Profil.objects.get(user=request.user)
@@ -245,7 +242,7 @@ def add_achievement(request):
 
         return redirect('achievements')
     return redirect('achievements')
-
+@login_required(login_url='/login/')
 def add_ish(request):
     try:
         user_profil = Profil.objects.get(user=request.user)
@@ -268,7 +265,7 @@ def add_ish(request):
             return redirect('experiences')
     return redirect('experiences')
 from django.shortcuts import get_object_or_404, redirect
-
+@login_required(login_url='/login/')
 def edit_project(request, pk):
     project = get_object_or_404(Loyihalar, pk=pk, profil__user=request.user)
     if request.method == 'POST':
@@ -283,9 +280,83 @@ def edit_project(request, pk):
             project.avatar = avatar
         project.save()
         return redirect('projects')
+    return render(request, 'edit_project.html', {'project': project})
+@login_required(login_url='/login/')
+def del_project(request, pk):
+    project = Loyihalar.objects.get(pk=pk, profil__user=request.user)
+    project.delete()
     return redirect('projects')
+@login_required(login_url='/login/')
+def del_job(request, pk):
+    job=Ish_faoliyati.objects.get(pk=pk, profil__user=request.user)
+    job.delete()
+    return redirect('experiences')
 
+@login_required(login_url='/login/')
+def edit_job(request, pk):
+    job=Ish_faoliyati.objects.get(pk=pk, profil__user=request.user)
+    if request.method == 'POST':
+        job.kompaniya = request.POST.get('kompaniya')
+        job.lavozim = request.POST.get('lavozim')
+        job.ish_turi = request.POST.get('ish_turi')
+        job.boshlangan_sana = request.POST.get('boshlangan_sana')
+        tugash_sanasi = request.POST.get('tugatilgan_sana')
+        if tugash_sanasi and tugash_sanasi.strip():
+            job.tugatilgan_sana = tugash_sanasi
+        else:
+            job.tugatilgan_sana = None
+        job.tavsif = request.POST.get('tavsif')
+        rasm = request.FILES.get('fotolavha')
+        if rasm:
+            job.fotolavha=rasm
+        job.save()
+        return redirect('experiences')
+    return render(request, 'edit_job.html', {'job': job})
 
+@login_required(login_url='/login/')
+def edit_achievement(request, pk):
+    achievement = get_object_or_404(Tadbirlar_va_yutuqlar, pk=pk, profil__user=request.user)
+    if request.method == 'POST':
+        achievement.nomi = request.POST.get('nomi')
+        achievement.roli = request.POST.get('roli')
+        achievement.tavsif = request.POST.get('tavsif')
+        sana = request.POST.get('bolib_otgan_sanasi')
+        if sana and sana.strip():
+            achievement.bolib_otgan_sanasi = sana
+        else:
+            achievement.bolib_otgan_sanasi = None
+        achievement.save()
+        yangi_rasmlar = request.FILES.getlist('rasmlar')
+        if yangi_rasmlar:
+            achievement.rasmlari.all().delete()
+            for rasm in yangi_rasmlar:
+                TadbirRasmi.objects.create(tadbir=achievement, rasm=rasm)
+        return redirect('achievements')
+    return redirect('achievements')
+
+@login_required(login_url='/login/')
+def delete_achievement(request, pk):
+    achievement = get_object_or_404(Tadbirlar_va_yutuqlar, pk=pk, profil__user=request.user)
+    achievement.delete()
+    return redirect('achievements')
+
+def edit_certificate(request, pk):
+    cert = get_object_or_404(Sertifikat, pk=pk, profil__user=request.user)
+    if request.method == "POST":
+        cert.nomi = request.POST.get('nomi')
+        cert.bergan_tashkilot = request.POST.get('bergan_tashkilot')
+        cert.olingan_sana = request.POST.get('olingan_sana')
+        yangi_fayl = request.FILES.get('fayl_isbot')
+        if yangi_fayl:
+            cert.fayl_isbot = yangi_fayl
+        cert.save()
+        return redirect('certificates')
+    return redirect('certificates')
+
+def delete_certificate(request, pk):
+    cert = get_object_or_404(Sertifikat, pk=pk, profil__user=request.user)
+    cert.delete()
+    return redirect('certificates')
 
 
 

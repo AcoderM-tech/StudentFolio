@@ -12,6 +12,8 @@
         overflow: hidden;
         transition: 0.3s ease;
         position: relative;
+        display: flex;
+        flex-direction: column;
     }
     .achievement-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
@@ -29,7 +31,7 @@
         object-fit: cover;
     }
 
-    /* Uchta nuqta menyusi (Dropdown) */
+    /* Uchta nuqta menyusi */
     .options-dropdown {
         position: absolute;
         top: 10px;
@@ -40,8 +42,8 @@
         background: rgba(255, 255, 255, 0.9);
         border: none;
         border-radius: 50%;
-        width: 35px;
-        height: 35px;
+        width: 32px;
+        height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -52,42 +54,55 @@
     /* Tavsif mantiqi */
     .tavsif-text {
         display: -webkit-box;
-        -webkit-line-clamp: 1;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         word-break: break-all;
-        color: #6c757d;
-        font-size: 0.9rem;
+        color: #495057;
+        font-size: 0.85rem;
+        line-height: 1.4;
     }
     .tavsif-text.expanded {
         display: block;
         -webkit-line-clamp: unset;
     }
     .more-btn {
-        font-size: 0.85rem; font-weight: bold; color: #0d6efd;
+        font-size: 0.8rem; font-weight: bold; color: #0d6efd;
         cursor: pointer; border: none; background: none; padding: 0;
     }
 
-    /* Lightbox Navigatsiya - Fixed (Ekranda qotgan) */
+    /* Badge ranglari */
+    .role-badge {
+        font-size: 0.7rem;
+        padding: 2px 8px;
+        border-radius: 50px;
+        font-weight: 600;
+        display: inline-block;
+    }
+    /* Model Choices mantiqiga mos ranglar */
+    .bg-golib { background-color: #fff3cd; color: #856404; }
+    .bg-ishtirokchi { background-color: #e2e3e5; color: #383d41; }
+    .bg-spiker { background-color: #cce5ff; color: #004085; }
+    .bg-tashkilotchi { background-color: #d4edda; color: #155724; }
+
+    /* Lightbox Navigatsiya */
     .lightbox-nav {
         position: fixed; top: 50%; transform: translateY(-50%);
         background: rgba(0, 0, 0, 0.5); color: white; border: none;
-        width: 60px; height: 60px; border-radius: 50%;
+        width: 50px; height: 50px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-size: 2rem; cursor: pointer; z-index: 2050; transition: 0.3s;
+        font-size: 1.5rem; cursor: pointer; z-index: 2050; transition: 0.3s;
     }
     .lightbox-nav:hover { background: rgba(0, 0, 0, 0.8); }
     .nav-prev { left: 20px; }
     .nav-next { right: 20px; }
     .lightbox-img { max-width: 90%; max-height: 85vh; object-fit: contain; border-radius: 10px; }
-
-    .btn-close-white { z-index: 2060; }
 </style>
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold mb-0">Tadbirlar va Yutuqlar</h3>
-        <button type="button" class="btn btn-primary rounded-pill px-4" data-bs-toggle="modal" data-bs-target="#addAchievementModal">
+        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#addAchievementModal">
             <i class="bi bi-plus-lg me-1"></i> Qo'shish
         </button>
     </div>
@@ -98,38 +113,90 @@
             <div class="achievement-card shadow-sm h-100">
 
                 <div class="dropdown options-dropdown">
-                    <button class="btn-options" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn-options" type="button" data-bs-toggle="dropdown">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end border-0 shadow rounded-3">
-                        <li><a class="dropdown-item py-2" href="#"><i class="bi bi-pencil me-2"></i> Tahrirlash</a></li>
+                        <li><a class="dropdown-item py-2" href="#" data-bs-toggle="modal" data-bs-target="#editAchievementModal{{ achievement.id }}"><i class="bi bi-pencil me-2"></i> Tahrirlash</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item py-2 text-danger" href="#"><i class="bi bi-trash me-2"></i> O'chirish</a></li>
+                        <li><a class="dropdown-item py-2 text-danger" href="{% url 'delete_achievement' achievement.id %}" onclick="return confirm('Haqiqatan ham o\'chirmoqchimisiz?')"><i class="bi bi-trash me-2"></i> O'chirish</a></li>
                     </ul>
                 </div>
 
                 <div class="img-container" onclick="openLightbox({{ forloop.counter0 }})">
                     {% if achievement.rasmlari.exists %}
-                        <img src="{{ achievement.rasmlari.first.rasm.url }}" alt="Post">
+                        <img src="{{ achievement.rasmlari.first.rasm.url }}" alt="{{ achievement.nomi }}">
                         {% if achievement.rasmlari.count > 1 %}
                         <div class="position-absolute bottom-0 end-0 m-2">
-                            <span class="badge bg-dark opacity-75 small">
-                                <i class="bi bi-images me-1"></i> {{ achievement.rasmlari.count }}
-                            </span>
+                            <span class="badge bg-dark opacity-75 small"><i class="bi bi-images me-1"></i> {{ achievement.rasmlari.count }}</span>
                         </div>
                         {% endif %}
                     {% endif %}
                 </div>
 
-                <div class="p-3">
-                    <h6 class="fw-bold mb-1 text-truncate">{{ achievement.nomi }}</h6>
-                    <div class="mb-2">
-                        <span id="text-{{ achievement.id }}" class="tavsif-text">
-                            {{ achievement.tavsif|default:"Tavsif yo'q." }}
+                <div class="p-3 d-flex flex-column flex-grow-1">
+                    <div class="mb-1">
+                        <span class="role-badge bg-{{ achievement.roli }}">
+                            {{ achievement.get_roli_display }}
                         </span>
-                        {% if achievement.tavsif and achievement.tavsif|length > 35 %}
+                    </div>
+                    <h6 class="fw-bold mb-2">{{ achievement.nomi }}</h6>
+                    <div class="mb-3 flex-grow-1">
+                        <span id="text-{{ achievement.id }}" class="tavsif-text">
+                            {{ achievement.tavsif|default:"Tavsif kiritilmagan." }}
+                        </span>
+                        {% if achievement.tavsif and achievement.tavsif|length > 50 %}
                         <button onclick="toggleText('{{ achievement.id }}')" id="btn-{{ achievement.id }}" class="more-btn">...yana</button>
                         {% endif %}
+                    </div>
+                    <div class="mt-auto pt-2 border-top text-muted small">
+                        <i class="bi bi-calendar3 me-1"></i> {{ achievement.bolib_otgan_sanasi|date:"d.m.Y"|default:"Sana yo'q" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editAchievementModal{{ achievement.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg" style="border-radius: 1.5rem;">
+                    <div class="modal-header border-0 p-4 pb-0">
+                        <h5 class="fw-bold text-primary">Tahrirlash</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form action="{% url 'edit_achievement' achievement.id %}" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold">Nomi</label>
+                                    <input type="text" name="nomi" class="form-control rounded-3" value="{{ achievement.nomi }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold">Rol</label>
+                                    <select name="roli" class="form-select rounded-3">
+                                        {% for val, label in achievement.Rolchoices.choices %}
+                                        <option value="{{ val }}" {% if achievement.roli == val %}selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold">Sana</label>
+                                    <input type="date" name="bolib_otgan_sanasi" class="form-control rounded-3" value="{{ achievement.bolib_otgan_sanasi|date:'Y-m-d' }}">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold">Tavsif (max 500)</label>
+                                    <textarea name="tavsif" class="form-control rounded-3" rows="3">{{ achievement.tavsif }}</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold text-danger">Rasmlarni yangilash (Eskilari o'chadi)</label>
+                                    <input type="file" name="rasmlar" class="form-control rounded-3" accept="image/*" multiple>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-top d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Bekor qilish</button>
+                                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Saqlash</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -142,10 +209,8 @@
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content bg-transparent border-0 text-center">
             <button type="button" class="btn-close btn-close-white position-fixed top-0 end-0 m-4" data-bs-dismiss="modal"></button>
-
             <button class="lightbox-nav nav-prev" id="prevBtn" onclick="changeImage(-1)"><i class="bi bi-chevron-left"></i></button>
             <button class="lightbox-nav nav-next" id="nextBtn" onclick="changeImage(1)"><i class="bi bi-chevron-right"></i></button>
-
             <div class="modal-body p-0">
                 <img src="" id="lightboxImage" class="lightbox-img">
             </div>
@@ -157,7 +222,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 1.5rem;">
             <div class="modal-header border-0 p-4 pb-0">
-                <h5 class="fw-bold">Yangi post yaratish</h5>
+                <h5 class="fw-bold text-primary">Yangi yutuq qo'shish</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body p-4">
@@ -165,7 +230,7 @@
                     {% csrf_token %}
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label small fw-bold">Sarlavha</label>
+                            <label class="form-label small fw-bold">Nomi</label>
                             <input type="text" name="nomi" class="form-control rounded-3" required>
                         </div>
                         <div class="col-md-6">
@@ -174,6 +239,7 @@
                                 <option value="ishtirokchi">Ishtirokchi</option>
                                 <option value="golib">G'olib</option>
                                 <option value="spiker">Spiker</option>
+                                <option value="tashkilotchi">Tashkilotchi</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -191,7 +257,7 @@
                     </div>
                     <div class="mt-4 pt-3 border-top d-flex justify-content-end gap-2">
                         <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Bekor qilish</button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Ulashish</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Saqlash</button>
                     </div>
                 </form>
             </div>
@@ -200,51 +266,40 @@
 </div>
 
 <script>
-    // Rasmlar bazasi
+    // Rasmlar massivi
     const allPostImages = [
         {% for achievement in achievements %}
             [{% for r in achievement.rasmlari.all %}"{{ r.rasm.url }}",{% endfor %}],
         {% endfor %}
     ];
 
-    let currentPostIdx = 0;
-    let currentImgIdx = 0;
+    let currentPostIdx = 0, currentImgIdx = 0;
 
-    // Tavsifni ochish/yopish
     function toggleText(id) {
         const text = document.getElementById('text-' + id);
         const btn = document.getElementById('btn-' + id);
-        if (text.classList.contains('expanded')) {
-            text.classList.remove('expanded');
-            btn.innerText = "...yana";
-        } else {
-            text.classList.add('expanded');
-            btn.innerText = " yopish";
-        }
+        text.classList.toggle('expanded');
+        btn.innerText = text.classList.contains('expanded') ? " yopish" : "...yana";
     }
 
-    // Lightbox funksiyalari
     function openLightbox(postIdx) {
-        currentPostIdx = postIdx;
-        currentImgIdx = 0;
+        currentPostIdx = postIdx; currentImgIdx = 0;
         updateLightbox();
-        const myModal = new bootstrap.Modal(document.getElementById('lightboxModal'));
-        myModal.show();
+        new bootstrap.Modal(document.getElementById('lightboxModal')).show();
     }
 
     function changeImage(step) {
-        const images = allPostImages[currentPostIdx];
-        currentImgIdx = (currentImgIdx + step + images.length) % images.length;
+        const imgs = allPostImages[currentPostIdx];
+        currentImgIdx = (currentImgIdx + step + imgs.length) % imgs.length;
         updateLightbox();
     }
 
     function updateLightbox() {
-        const images = allPostImages[currentPostIdx];
-        document.getElementById('lightboxImage').src = images[currentImgIdx];
-
-        const hasMultiple = images.length > 1;
-        document.getElementById('prevBtn').style.display = hasMultiple ? 'flex' : 'none';
-        document.getElementById('nextBtn').style.display = hasMultiple ? 'flex' : 'none';
+        const imgs = allPostImages[currentPostIdx];
+        document.getElementById('lightboxImage').src = imgs[currentImgIdx];
+        const multi = imgs.length > 1;
+        document.getElementById('prevBtn').style.display = multi ? 'flex' : 'none';
+        document.getElementById('nextBtn').style.display = multi ? 'flex' : 'none';
     }
 </script>
 {% endblock %}
