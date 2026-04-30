@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}CV Yaratish | StudentFolio{% endblock %}
+
+{% block content %}
+<style>
+    .compact-card {
+        border-radius: 12px;
+        border: 1px solid #eef2f7;
+        transition: 0.2s;
+    }
+    .compact-card:hover {
+        background-color: #f8faff;
+        border-color: #d1e3ff;
+    }
+    .form-check-input {
+        width: 1.2em;
+        height: 1.2em;
+        cursor: pointer;
+    }
+    .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+    .scroll-area {
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+    /* Scrollbar dizayni */
+    .scroll-area::-webkit-scrollbar { width: 5px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+</style>
+
+<div class="container-fluid">
+    <form action="#" method="POST" id="cvForm">
+        {% csrf_token %}
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <h3 class="fw-800 mb-1">CV Generator</h3>
+                    <p class="text-muted small">Kerakli ma'lumotlarni belgilang. Tartiblash avtomatik amalga oshiriladi.</p>
+                </div>
+
+                <div class="stat-card mb-4">
+                    <div class="section-title text-primary">
+                        <i class="bi bi-briefcase-fill me-2"></i> Ish faoliyati
+                    </div>
+                    <div class="scroll-area">
+                        {% for job in experiences %}
+                        <div class="compact-card p-2 mb-2 d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <input class="form-check-input me-3" type="checkbox" name="jobs" value="{{ job.id }}" checked>
+                                <div>
+                                    <span class="fw-600 small d-block">{{ job.lavozim }}</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">{{ job.kompaniya }}</span>
+                                </div>
+                            </div>
+                            <span class="badge bg-light text-muted fw-normal" style="font-size: 0.7rem;">
+                                {{ job.boshlangan_sana|date:"Y" }}
+                            </span>
+                        </div>
+                        {% empty %}
+                            <p class="text-muted small p-3 text-center">Ma'lumot topilmadi</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-card mb-4 h-100">
+                            <div class="section-title text-success">
+                                <i class="bi bi-code-square me-2"></i> Loyihalar
+                            </div>
+                            <div class="scroll-area">
+                                {% for proj in projects %}
+                                <label class="compact-card p-2 mb-2 d-flex align-items-center w-100" style="cursor: pointer;">
+                                    <input class="form-check-input me-2" type="checkbox" name="projects" value="{{ proj.id }}" checked>
+                                    <span class="text-truncate small fw-500">{{ proj.nomi }}</span>
+                                </label>
+                                {% empty %}
+                                    <p class="text-muted small text-center">Loyiha qo'shilmagan</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="stat-card mb-4 h-100">
+                            <div class="section-title text-warning">
+                                <i class="bi bi-patch-check-fill me-2"></i> Sertifikatlar
+                            </div>
+                            <div class="scroll-area">
+                                {% for cert in certificates %}
+                                <label class="compact-card p-2 mb-2 d-flex align-items-center w-100" style="cursor: pointer;">
+                                    <input class="form-check-input me-2" type="checkbox" name="certs" value="{{ cert.id }}" checked>
+                                    <span class="text-truncate small fw-500">{{ cert.nomi }}</span>
+                                </label>
+                                {% empty %}
+                                    <p class="text-muted small text-center">Sertifikatlar mavjud emas</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="stat-card sticky-top" style="top: 20px;">
+                    <h5 class="fw-bold mb-4">Eksport Sozlamalari</h5>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">Dizaynni tanlang</label>
+                        <div class="d-grid gap-2">
+                            <input type="radio" class="btn-check" name="template" id="t1" value="modern" checked>
+                            <label class="btn btn-outline-primary text-start py-2 px-3 rounded-3" for="t1">
+                                <i class="bi bi-palette-fill me-2"></i> Modern Blue
+                            </label>
+
+                            <input type="radio" class="btn-check" name="template" id="t2" value="minimal">
+                            <label class="btn btn-outline-primary text-start py-2 px-3 rounded-3" for="t2">
+                                <i class="bi bi-file-earmark-text me-2"></i> Minimalist (ATS)
+                            </label>
+
+                            <input type="radio" class="btn-check" name="template" id="t3" value="dark">
+                            <label class="btn btn-outline-primary text-start py-2 px-3 rounded-3" for="t3">
+                                <i class="bi bi-moon-fill me-2"></i> Dark Elegant
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-warning py-2 mb-4" style="font-size: 0.8rem; border-radius: 10px; border: none; background: #fff8e6;">
+                        <i class="bi bi-info-circle-fill me-2"></i> Tanlangan barcha ma'lumotlar avtomatik tartibda PDF-da joylashadi.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold rounded-3 shadow-sm">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i> PDF YUKLAB OLISH
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

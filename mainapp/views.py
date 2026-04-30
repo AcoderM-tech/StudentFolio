@@ -339,7 +339,7 @@ def delete_achievement(request, pk):
     achievement = get_object_or_404(Tadbirlar_va_yutuqlar, pk=pk, profil__user=request.user)
     achievement.delete()
     return redirect('achievements')
-
+@login_required(login_url='/login/')
 def edit_certificate(request, pk):
     cert = get_object_or_404(Sertifikat, pk=pk, profil__user=request.user)
     if request.method == "POST":
@@ -352,11 +352,22 @@ def edit_certificate(request, pk):
         cert.save()
         return redirect('certificates')
     return redirect('certificates')
-
+@login_required(login_url='/login/')
 def delete_certificate(request, pk):
     cert = get_object_or_404(Sertifikat, pk=pk, profil__user=request.user)
     cert.delete()
     return redirect('certificates')
+@login_required(login_url='/login/')
+def cv_generator_page(request):
+    profil = request.user.profil
+    context = {
+        'profil': profil,
+        'projects': profil.loyihalar.all().order_by('-yaratilgan_sana'),
+        'certificates': profil.sertifikat.all().order_by('-olingan_sana'),
+        'experiences': profil.ishlari.all().order_by('-boshlangan_sana'),
+        'achievements': profil.tadbirlar.all().order_by('-bolib_otgan_sanasi'),
+    }
+    return render(request, 'dashboard/cv_generator.html', context)
 
 
 

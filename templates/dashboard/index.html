@@ -1,51 +1,163 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+    /* 1. ICON GLOW & GRADIENTS (Ikonalar chiqishi uchun shart) */
+    .bg-glow-primary {
+        background: linear-gradient(135deg, #4361ee, #4facfe);
+        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.3);
+    }
+    .bg-glow-warning {
+        background: linear-gradient(135deg, #ff9a00, #ffc107);
+        box-shadow: 0 10px 20px rgba(255, 154, 0, 0.3);
+    }
+    .bg-glow-info {
+        background: linear-gradient(135deg, #00f2fe, #4facfe);
+        box-shadow: 0 10px 20px rgba(0, 242, 254, 0.3);
+    }
+    .bg-glow-success {
+        background: linear-gradient(135deg, #00b09b, #96c93d);
+        box-shadow: 0 10px 20px rgba(0, 176, 155, 0.3);
+    }
+
+    /* 2. ASIMMETRIK ULTRA CARDLAR */
+    .ultra-card {
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        border-radius: 32px 8px 32px 8px;
+        padding: 24px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(15px);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+        height: 100%;
+    }
+
+    .ultra-card:hover {
+        border-radius: 8px 32px 8px 32px;
+        transform: translateY(-8px);
+        background: #ffffff;
+        box-shadow: 0 25px 50px -12px rgba(67, 97, 238, 0.15);
+    }
+
+    .ultra-sticker {
+        width: 54px; height: 54px;
+        border-radius: 16px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 24px; /* Ikona hajmi */
+        margin-bottom: 20px;
+        position: relative; z-index: 2;
+        color: white !important; /* Ikona rangi oq bo'lishi shart */
+    }
+
+    /* Orqa fondagi ulkan shaffof ikonalar */
+    .ultra-bg-icon {
+        position: absolute;
+        right: -10px; bottom: -10px;
+        font-size: 90px;
+        color: rgba(0, 0, 0, 0.03) !important;
+        transform: rotate(-15deg);
+        transition: 0.5s;
+        z-index: 1;
+    }
+    .ultra-card:hover .ultra-bg-icon {
+        transform: rotate(0deg) scale(1.2);
+        color: rgba(67, 97, 238, 0.06) !important;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #1e293b;
+        letter-spacing: -1.5px;
+        margin-bottom: 0;
+    }
+
+    /* 3. PROFILE & TABLE (Avvalgi Premium qismlar) */
+    .profile-card-artistic {
+        background: #ffffff; border-radius: 40px; overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+    }
+    .profile-banner-art {
+        height: 120px; background: linear-gradient(135deg, #4361ee, #9b51e0);
+        position: relative;
+    }
+    .profile-img-squircle {
+        width: 120px; height: 120px; border-radius: 42px;
+        border: 6px solid #ffffff; object-fit: cover;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    .status-dot-pulse {
+        position: absolute; bottom: 12px; right: 12px;
+        width: 20px; height: 20px; background: #22c55e;
+        border: 4px solid #ffffff; border-radius: 50%;
+    }
+    .status-dot-pulse::after {
+        content: ""; position: absolute; width: 100%; height: 100%;
+        background: #22c55e; border-radius: 50%; animation: pulse-ring 2s infinite;
+    }
+    @keyframes pulse-ring { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.5); opacity: 0; } }
+</style>
+
 <div class="row g-4">
-    <div class="col-md-3">
-        <div class="stat-card">
-            <div class="icon-box bg-primary text-white"><i class="bi bi-code-square"></i></div>
+    <div class="col-md-3 col-6">
+        <div class="ultra-card">
+            <i class="bi bi-rocket-takeoff ultra-bg-icon"></i>
+            <div class="ultra-sticker bg-glow-primary">
+                <i class="bi bi-rocket-takeoff-fill"></i>
+            </div>
             <p class="text-muted small fw-bold mb-1 text-uppercase">Loyihalar</p>
-            <h3 class="fw-800 mb-0">{{ l_soni| default:"0" }}</h3>
+            <h3 class="stat-value">{{ l_soni|default:"0" }}</h3>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="stat-card">
-            <div class="icon-box bg-warning text-white"><i class="bi bi-star"></i></div>
+
+    <div class="col-md-3 col-6">
+        <div class="ultra-card">
+            <i class="bi bi-patch-check ultra-bg-icon"></i>
+            <div class="ultra-sticker bg-glow-warning">
+                <i class="bi bi-patch-check-fill"></i>
+            </div>
             <p class="text-muted small fw-bold mb-1 text-uppercase">Sertifikatlar</p>
-            <h3 class="fw-800 mb-0">{{ s_soni | default:"0"}}</h3>
+            <h3 class="stat-value">{{ s_soni|default:"0" }}</h3>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="stat-card">
-            <div class="icon-box bg-info text-white"><i class="bi bi-eye"></i></div>
+
+    <div class="col-md-3 col-6">
+        <div class="ultra-card">
+            <i class="bi bi-eye ultra-bg-icon"></i>
+            <div class="ultra-sticker bg-glow-info">
+                <i class="bi bi-eye-fill"></i>
+            </div>
             <p class="text-muted small fw-bold mb-1 text-uppercase">Tashriflar</p>
-            <h3 class="fw-800 mb-0">{{t_soni | default:"0"}}</h3>
+            <h3 class="stat-value">{{ t_soni|default:"0" }}</h3>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="stat-card">
-            <div class="icon-box bg-success text-white"><i class="bi bi-graph-up-arrow"></i></div>
-            <p class="text-muted small fw-bold mb-1 text-uppercase">GPA Reyting</p>
-            <h3 class="fw-800 mb-0">{{ profil.gpa }}</h3>
+
+    <div class="col-md-3 col-6">
+        <div class="ultra-card">
+            <i class="bi bi-mortarboard ultra-bg-icon"></i>
+            <div class="ultra-sticker bg-glow-success">
+                <i class="bi bi-award-fill"></i>
+            </div>
+            <p class="text-muted small fw-bold mb-1 text-uppercase">GPA</p>
+            <h3 class="stat-value">{{ profil.gpa }}</h3>
         </div>
     </div>
 
     <div class="col-lg-8">
-        <div class="stat-card h-100">
+        <div class="p-4 bg-white shadow-sm h-100" style="border-radius: 35px;">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h5 class="fw-bold mb-0">Oxirgi loyihalar</h5>
-                <a href="{% url 'projects' %}" class="btn btn-sm btn-light border rounded-pill px-3">Barchasi</a>
+                <h5 class="fw-800 text-dark mb-0">Oxirgi loyihalar</h5>
+                <a href="{% url 'projects' %}" class="btn btn-sm btn-light rounded-pill px-3 border">Barchasi</a>
             </div>
-
             <div class="table-responsive">
-                <table class="table table-borderless align-middle">
-                    <thead class="text-muted small">
+                <table class="table align-middle">
+                    <thead class="text-muted small text-uppercase">
                         <tr>
-                            <th>LOYIHA NOMI</th>
-                            <th>SANA</th>
-                            <th>STATUS</th>
-                            <th>HARAKAT</th>
+                            <th>Loyiha</th>
+                            <th>Sana</th>
+                            <th class="text-end">Holat</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,13 +165,14 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="rounded-3 bg-light me-3" style="width: 40px; height: 40px; background-image: url('{{ loyiha.avatar.url }}'); background-size: cover;"></div>
-                                    <span class="fw-semibold">{{ loyiha.nomi }}</span>
+                                    <img src="{{ loyiha.avatar.url }}" class="rounded-3 me-3" width="40" height="40">
+                                    <span class="fw-bold">{{ loyiha.nomi }}</span>
                                 </div>
                             </td>
                             <td class="text-muted small">{{ loyiha.yaratilgan_sana|date:"d.m.Y" }}</td>
-                            <td><span class="badge bg-soft-success text-success rounded-pill px-3" style="background: rgba(25, 135, 84, 0.1);">{{ loyiha.get_status_display }}</span></td>
-                            <td><button class="btn btn-sm btn-light rounded-circle"><i class="bi bi-three-dots"></i></button></td>
+                            <td class="text-end">
+                                <span class="badge bg-light text-primary rounded-pill px-3 border">{{ loyiha.get_status_display }}</span>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -69,25 +182,33 @@
     </div>
 
     <div class="col-lg-4">
-        <div class="stat-card text-center">
-            <div class="position-relative d-inline-block mb-3">
-                <img src="{{ profil.avatar.url }}" class="rounded-circle border" width="100" height="100" style="object-fit: cover;">
-                <span class="position-absolute bottom-0 end-0 bg-success border border-2 border-white rounded-circle" style="width: 15px; height: 15px;"></span>
+        <div class="profile-card-artistic text-center pb-5">
+            <div class="profile-banner-art"></div>
+            <div style="margin-top: -60px; position: relative; display: inline-block;">
+                <img src="{{ profil.avatar.url }}" class="profile-img-squircle">
+                <div class="status-dot-pulse"></div>
             </div>
-            <h5 class="fw-bold mb-1">{{ profil.ism }} {{ profil.familiya }}</h5>
-            <p class="text-muted small mb-4">{{ profil.fakultet }} | {{ profil.kurs }}-kurs</p>
-
-            <div class="bg-light rounded-4 p-3 mb-4 text-start small">
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Universitet:</span>
-                    <span class="fw-bold">{{ profil.university }}</span>
+            <div class="mt-3 px-4">
+                <h4 class="fw-800 text-dark mb-1">{{ profil.ism }} {{ profil.familiya }}</h4>
+                <p class="text-muted small mb-4">{{ profil.university }}</p>
+                <div class="row g-2 mb-4">
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-4">
+                            <span class="d-block text-muted small">Kurs</span>
+                            <span class="fw-bold">{{ profil.kurs }}-kurs</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded-4">
+                            <span class="d-block text-muted small">ID</span>
+                            <span class="fw-bold small">#{{ profil.id }}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">ID:</span>
-                    <span class="fw-bold">#{{ profil.id }}</span>
-                </div>
+                <a href="{% url 'profil_form' %}" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
+                    TAHRIRLASH
+                </a>
             </div>
-            <a href="{% url 'profil_form'  %}" class="btn btn-primary w-100 rounded-pill py-2 fw-bold">Profilni tahrirlash</a>
         </div>
     </div>
 </div>

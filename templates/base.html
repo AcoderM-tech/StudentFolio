@@ -5,78 +5,345 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}StudentFolio | Dashboard{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        :root { --sidebar-width: 280px; --primary: #0d6efd; --bg-soft: #f8faff; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-soft); overflow-x: hidden; }
+        :root {
+            --sidebar-collapsed: 72px;
+            --sidebar-expanded: 240px;
+            --primary: #4361ee;
+            --primary-soft: rgba(67, 97, 238, 0.22);
+            --sidebar-bg: #1e293b;
+            --sidebar-text: #94a3b8;
+            --sidebar-text-active: #e2e8f0;
+            --sidebar-hover: rgba(255, 255, 255, 0.06);
+            --bg-body: #f0f2f5;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
+            --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        /* Sidebar */
-        .sidebar { width: var(--sidebar-width); height: 100vh; position: fixed; background: #fff; border-right: 1px solid #edf2f9; z-index: 1000; transition: 0.3s; }
-        .sidebar-brand { padding: 2rem 1.5rem; font-weight: 800; color: var(--primary); font-size: 1.5rem; text-decoration: none; display: block; }
+        * { box-sizing: border-box; }
 
-        .nav-link { padding: 0.8rem 1.5rem; color: #6e84a3; font-weight: 500; border-radius: 12px; margin: 0.2rem 1rem; transition: 0.2s; }
-        .nav-link:hover { color: var(--primary); background: rgba(13, 110, 253, 0.05); }
-        .nav-link.active { color: #fff; background: var(--primary); box-shadow: 0 4px 15px rgba(13, 110, 253, 0.25); }
-        .nav-link i { font-size: 1.2rem; margin-right: 10px; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            margin: 0;
+        }
 
-        /* Main Area */
-        .main-wrapper { margin-left: var(--sidebar-width); min-height: 100vh; padding: 2rem; }
-        .top-navbar { background: transparent; padding: 0 1rem 2rem 1rem; }
+        /* ── SIDEBAR ─────────────────────────────────────────── */
+        .sidebar {
+            width: var(--sidebar-collapsed);
+            height: 100vh;
+            position: fixed;
+            top: 0; left: 0;
+            background: var(--sidebar-bg);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            overflow: hidden;
+            transition: width var(--transition);
+        }
 
-        /* Modern Cards */
-        .stat-card { border: none; border-radius: 20px; padding: 1.5rem; background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.02); transition: 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.05); }
-        .icon-box { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+        .sidebar:hover {
+            width: var(--sidebar-expanded);
+        }
+
+        /* Brand */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 0 16px;
+            margin-bottom: 20px;
+            text-decoration: none;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: white;
+            font-size: 18px;
+            box-shadow: 0 4px 14px rgba(67, 97, 238, 0.35);
+        }
+
+        .brand-name {
+            font-size: 15px;
+            font-weight: 800;
+            color: #f1f5f9;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar:hover .brand-name { opacity: 1; }
+
+        /* Nav groups */
+        .nav-group {
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .nav-section-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 10px 6px 4px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity var(--transition);
+            display: block;
+        }
+
+        .sidebar:hover .nav-section-label { opacity: 1; }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: background 0.15s, color 0.15s;
+            width: 100%;
+            text-decoration: none;
+            margin-bottom: 2px;
+        }
+
+        .nav-link i {
+            font-size: 16px;
+            flex-shrink: 0;
+            width: 16px;
+            text-align: center;
+        }
+
+        .nav-link-text {
+            opacity: 0;
+            transition: opacity var(--transition);
+        }
+
+        .sidebar:hover .nav-link-text { opacity: 1; }
+
+        .nav-link:hover {
+            background: var(--sidebar-hover);
+            color: var(--sidebar-text-active);
+        }
+
+        .nav-link.active {
+            background: var(--primary-soft);
+            color: #93c5fd;
+        }
+
+        .nav-link.nav-cv {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .nav-link.nav-cv:hover {
+            background: #3451d1;
+            color: #fff;
+        }
+
+        /* Sidebar bottom */
+        .sidebar-bottom {
+            margin-top: auto;
+            width: 100%;
+            padding: 0 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 12px;
+        }
+
+        .sidebar-bottom .nav-link.text-danger {
+            color: #f87171 !important;
+        }
+
+        .sidebar-bottom .nav-link.text-danger:hover {
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171 !important;
+        }
+
+        /* User avatar in sidebar */
+        .sidebar-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        /* ── MAIN WRAPPER ────────────────────────────────────── */
+        .main-wrapper {
+            margin-left: var(--sidebar-collapsed);
+            min-height: 100vh;
+            transition: margin-left var(--transition);
+        }
+
+        /* ── TOPBAR ──────────────────────────────────────────── */
+        .topbar {
+            background: rgba(240, 242, 245, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 15px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .page-title {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .user-pill {
+            background: #fff;
+            padding: 4px 14px 4px 4px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            border: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .user-pill img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-pill span {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* ── CONTENT AREA ────────────────────────────────────── */
+        .content-area {
+            padding: 1.5rem 2rem 3rem;
+        }
+
+        /* ── STAT CARDS ──────────────────────────────────────── */
+        .stat-card {
+            border: none;
+            border-radius: 18px;
+            padding: 1.5rem;
+            background: #ffffff;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <a href="/" class="sidebar-brand">StudentFolio<span style="color: #f3a847;">.</span></a>
-        <nav class="nav flex-column">
-    <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-        <i class="bi bi-grid-1x2-fill"></i> Asosiy
-    </a>
-    <a href="{% url 'projects' %}" class="nav-link {% if request.resolver_match.url_name == 'projects' %}active{% endif %}">
-        <i class="bi bi-folder2-open"></i> Loyihalarim
-    </a>
-    <a href="{% url 'certificates' %}" class="nav-link {% if request.resolver_match.url_name == 'certificates' %}active{% endif %}">
-        <i class="bi bi-patch-check"></i> Sertifikatlar
-    </a>
-    <a href="{% url 'achievements' %}" class="nav-link {% if request.resolver_match.url_name == 'achievements' %}active{% endif %}">
-        <i class="bi bi-trophy"></i> Yutuqlar
-    </a>
-  <a href="{% url 'experiences' %}" class="nav-link {% if request.resolver_match.url_name == 'experiences' %}active{% endif %}">
-    <i class="bi bi-briefcase"></i> Ish faoliyati
-</a>
-    <div class="mt-4 px-4 small text-uppercase fw-bold text-muted" style="font-size: 0.7rem; letter-spacing: 1px;">Sozlamalar</div>
+    <aside class="sidebar" id="sidebar">
+        <a href="/" class="sidebar-brand">
+            <div class="brand-icon"><i class="bi bi-stack"></i></div>
+            <span class="brand-name">StudentFolio</span>
+        </a>
 
-    <a href="{% url 'profil_form' %}" class="nav-link {% if request.resolver_match.url_name == 'profil_form' %}active{% endif %}">
-        <i class="bi bi-person-gear"></i> Profil tahriri
-    </a>
-    <a href="{% url 'logout' %}" class="nav-link text-danger">
-        <i class="bi bi-box-arrow-right"></i> Chiqish
-    </a>
-</nav>
+        <nav class="nav-group nav flex-column w-100 gap-0">
+            <a href="{% url 'dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <i class="bi bi-grid-fill"></i>
+                <span class="nav-link-text">Dashboard</span>
+            </a>
+            <a href="{% url 'projects' %}" class="nav-link {% if request.resolver_match.url_name == 'projects' %}active{% endif %}">
+                <i class="bi bi-folder-fill"></i>
+                <span class="nav-link-text">Loyihalar</span>
+            </a>
+            <a href="{% url 'certificates' %}" class="nav-link {% if request.resolver_match.url_name == 'certificates' %}active{% endif %}">
+                <i class="bi bi-award-fill"></i>
+                <span class="nav-link-text">Sertifikatlar</span>
+            </a>
+            <a href="{% url 'achievements' %}" class="nav-link {% if request.resolver_match.url_name == 'achievements' %}active{% endif %}">
+                <i class="bi bi-trophy-fill"></i>
+                <span class="nav-link-text">Tadbirlar va yutuqlar</span>
+            </a>
+            <a href="{% url 'experiences' %}" class="nav-link {% if request.resolver_match.url_name == 'experiences' %}active{% endif %}">
+                <i class="bi bi-briefcase-fill"></i>
+                <span class="nav-link-text">Ish faoliyati </span>
+            </a>
+        </nav>
+
+        <div class="nav-group w-100 mt-3">
+            <span class="nav-section-label">Generator</span>
+            <a href="{% url 'cv_generator' %}" class="nav-link nav-cv {% if request.resolver_match.url_name == 'cv_generator' %}active{% endif %}">
+                <i class="bi bi-magic"></i>
+                <span class="nav-link-text">CV Generator</span>
+            </a>
+        </div>
+
+        <div class="sidebar-bottom">
+            <a href="{% url 'profil_form' %}" class="nav-link {% if request.resolver_match.url_name == 'profil_form' %}active{% endif %}">
+                <img src="{{ profil.avatar.url }}" class="sidebar-avatar" alt="">
+                <span class="nav-link-text">{{ profil.ism }}</span>
+            </a>
+            <a href="{% url 'logout' %}" class="nav-link text-danger">
+                <i class="bi bi-power"></i>
+                <span class="nav-link-text">Chiqish</span>
+            </a>
+        </div>
     </aside>
 
     <main class="main-wrapper">
-        <div class="top-navbar d-flex justify-content-between align-items-center">
-            <div>
-                <h4 class="fw-800 mb-0">Xush kelibsiz, {{ profil.ism }}! </h4>
-                <p class="text-muted small mb-0">Bugun: {% now "d-F, Y" %}</p>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <div class="text-end d-none d-md-block">
-                    <p class="mb-0 fw-bold">{{ profil.ism }} {{ profil.familiya }}</p>
-                    <p class="text-muted small mb-0">{{ profil.university }}</p>
-                </div>
-                <img src="{{ profil.avatar.url }}" class="rounded-circle border p-1" width="45" height="45" style="object-fit: cover;">
-            </div>
-        </div>
+        <header class="topbar">
+            <h1 class="page-title">
+                {% if request.resolver_match.url_name == 'dashboard' %}Asosiy panel
+                {% elif request.resolver_match.url_name == 'cv_generator' %}CV Builder
+                {% else %}{{ request.resolver_match.url_name|title }}{% endif %}
+            </h1>
 
-        {% block content %}{% endblock %}
+            <div class="user-pill">
+                <img src="{{ profil.avatar.url }}" alt="{{ profil.ism }}">
+                <span class="d-none d-md-inline">{{ profil.ism }}</span>
+            </div>
+        </header>
+
+        <div class="content-area">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

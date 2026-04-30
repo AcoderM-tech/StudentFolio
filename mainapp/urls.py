@@ -27,5 +27,6 @@ urlpatterns = [
     path('dashboard/achievements/delete/<int:pk>/', views.delete_achievement, name='delete_achievement'),
     path('dashboard/certificates/edit/<int:pk>/', views.edit_certificate, name='edit_certificate'),
     path('dashboard/certificates/delete/<int:pk>/', views.delete_certificate, name='delete_certificate'),
+    path('dashboard/cv-generator/', views.cv_generator_page, name='cv_generator'),
 ]
 
