@@ -309,10 +309,10 @@
 
         <div class="nav-group w-100 mt-3">
             <span class="nav-section-label">Generator</span>
-            <a href="{% url 'cv_generator' %}" class="nav-link nav-cv {% if request.resolver_match.url_name == 'cv_generator' %}active{% endif %}">
-                <i class="bi bi-magic"></i>
-                <span class="nav-link-text">CV Generator</span>
-            </a>
+           <a href="{% url 'generate_cv' %}" class="nav-link nav-cv {% if request.resolver_match.url_name == 'generate_cv' %}active{% endif %}">
+    <i class="bi bi-magic"></i>
+    <span class="nav-link-text">CV Generator</span>
+</a>
         </div>
 
         <div class="sidebar-bottom">

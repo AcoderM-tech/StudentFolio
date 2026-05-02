@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            color: #1a202c;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Oltin ramka */
+        .page-border {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 2px solid #d4af37; /* Royal Gold */
+            padding: 30px;
+            z-index: -1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+        .name {
+            font-size: 34px;
+            color: #1a365d;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+        .subtitle {
+            font-size: 14px;
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+        }
+
+        /* Section Titles */
+        .section-title {
+            text-align: center;
+            font-size: 16px;
+            color: #1a365d;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #d4af37;
+            padding-bottom: 5px;
+        }
+
+        /* Content Styles */
+        .item-row {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .item-header {
+            font-weight: bold;
+            font-size: 14px;
+            color: #1a365d;
+        }
+        .item-meta {
+            font-style: italic;
+            color: #718096;
+            font-size: 12px;
+        }
+        .description {
+            font-size: 11px;
+            color: #2d3748;
+            margin-top: 5px;
+            text-align: justify;
+        }
+
+        /* Layout Tables */
+        .info-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .info-cell {
+            text-align: center;
+            font-size: 11px;
+            color: #4a5568;
+            padding: 0 10px;
+        }
+
+        /* Projects Section */
+        .project-item {
+            margin-bottom: 10px;
+            border-left: 2px solid #d4af37;
+            padding-left: 15px;
+        }
+
+        .clear { clear: both; }
+    </style>
+</head>
+<body>
+    <div class="page-border"></div>
+
+    <div class="header">
+        <div class="name">{{ profile.ism }} {{ profile.familiya }}</div>
+        <div class="subtitle">{{ profile.ish_sohasi|default:"PROFESSIONAL SPECIALIST" }}</div>
+
+        <table class="info-table" style="margin-top: 20px;">
+            <tr>
+                <td class="info-cell">{{ profile.manzil }}</td>
+                <td class="info-cell" style="border-left: 1px solid #d4af37; border-right: 1px solid #d4af37;">
+                    GPA: {{ profile.gpa }} | {{ profile.university }}
+                </td>
+                <td class="info-cell">
+                    {% for social in profile.tarmoqlari.all|slice:":2" %}
+                        {{ social.nomi }}: {{ social.manzil }} {% if not forloop.last %}|{% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="section-title">Professional Tajriba</div>
+    {% for job in experiences %}
+    <div class="item-row">
+        <div style="float: left;" class="item-header">{{ job.lavozim }} — {{ job.kompaniya }}</div>
+        <div style="float: right;" class="item-meta">{{ job.boshlangan_sana|date:"Y" }} – {{ job.tugatilgan_sana|date:"Y"|default:"Hozir" }}</div>
+        <div class="clear"></div>
+        <div class="description">{{ job.tavsif }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="section-title">Asosiy Loyihalar</div>
+    {% for proj in projects %}
+    <div class="project-item">
+        <div class="item-header" style="font-size: 13px;">{{ proj.nomi }}</div>
+        <div class="description" style="margin-top: 2px;">{{ proj.tavsif|truncatechars:250 }}</div>
+    </div>
+    {% endfor %}
+
+    <div class="section-title">Sertifikatlar va Malaka</div>
+    <div style="text-align: center;">
+        {% for cert in certificates %}
+        <span style="font-size: 11px; color: #1a365d; font-weight: bold;">
+            {{ cert.nomi }} ({{ cert.bergan_tashkilot }})
+            {% if not forloop.last %} &bull; {% endif %}
+        </span>
+        {% endfor %}
+    </div>
+
+    <div class="section-title">Akademik Ma'lumot</div>
+    <div style="text-align: center; font-size: 12px;">
+        <strong>{{ profile.university }}</strong> — {{ profile.fakultet }} fakulteti, {{ profile.kurs }}-kurs talabasi.
+    </div>
+
+</body>
+</html>

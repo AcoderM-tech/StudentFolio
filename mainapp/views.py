@@ -357,15 +357,58 @@ def delete_certificate(request, pk):
     cert = get_object_or_404(Sertifikat, pk=pk, profil__user=request.user)
     cert.delete()
     return redirect('certificates')
+
+# def cv_generator_page(request):
+#     profil = request.user.profil
+#     context = {
+#         'profil': profil,
+#         'projects': profil.loyihalar.all().order_by('-yaratilgan_sana'),
+#         'certificates': profil.sertifikat.all().order_by('-olingan_sana'),
+#         'experiences': profil.ishlari.all().order_by('-boshlangan_sana'),
+#         'achievements': profil.tadbirlar.all().order_by('-bolib_otgan_sanasi'),
+#     }
+#     return render(request, 'dashboard/cv_generator.html', context)
+
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from weasyprint import HTML
+
+import os
+from django.conf import settings
+
 @login_required(login_url='/login/')
-def cv_generator_page(request):
-    profil = request.user.profil
+def cv_constructor_view(request):
+    user_profil = get_object_or_404(Profil, user=request.user)
+    if request.method == "POST":
+        job_ids = request.POST.getlist('jobs')
+        project_ids = request.POST.getlist('projects')
+        cert_ids = request.POST.getlist('certs')
+        template_name = request.POST.get('template', 'modern')
+        experiences = Ish_faoliyati.objects.filter(id__in=job_ids).order_by('-boshlangan_sana')
+        projects = Loyihalar.objects.filter(id__in=project_ids)
+        certificates = Sertifikat.objects.filter(id__in=cert_ids)
+        context = {
+            'profile': user_profil,
+            'experiences': experiences,
+            'projects': projects,
+            'certificates': certificates,
+            # Avatar uchun absolute path
+            'avatar_path': os.path.join(settings.MEDIA_ROOT, str(user_profil.avatar)),
+            'media_root': settings.MEDIA_ROOT,
+        }
+        html_string = render_to_string(f'cv/{template_name}.html', context)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="CV_{user_profil.ism}_{user_profil.familiya}.pdf"'
+        HTML(
+            string=html_string,
+            base_url=f"file://{settings.MEDIA_ROOT}/"
+        ).write_pdf(response)
+        return response
     context = {
-        'profil': profil,
-        'projects': profil.loyihalar.all().order_by('-yaratilgan_sana'),
-        'certificates': profil.sertifikat.all().order_by('-olingan_sana'),
-        'experiences': profil.ishlari.all().order_by('-boshlangan_sana'),
-        'achievements': profil.tadbirlar.all().order_by('-bolib_otgan_sanasi'),
+        'profil': user_profil,
+        'experiences': Ish_faoliyati.objects.filter(profil=user_profil).order_by('-boshlangan_sana'),
+        'projects': Loyihalar.objects.filter(profil=user_profil),
+        'certificates': Sertifikat.objects.filter(profil=user_profil),
     }
     return render(request, 'dashboard/cv_generator.html', context)
 
