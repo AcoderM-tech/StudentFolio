@@ -15,15 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from mainapp import views
+from django.urls import path, include
 from django.conf.urls.static import static
 from . import settings
-from django.urls import path, include
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('mainapp.urls')),
 ]
-# Media fayllarni ko'rsatish uchun (faqat DEBUG=True bo'lganda ishlaydi)
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# Media fayllarni har doim serve qilish (SQLite/Render uchun)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
