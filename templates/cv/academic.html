@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 30px;
+        }
+        
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #27272a;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            line-height: 1.4;
+        }
+
+        /* Akademik Header */
+        .academic-header {
+            border-bottom: 3px double #1e3a8a;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            position: relative;
+        }
+        .name {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+        .student-status {
+            font-size: 14px;
+            color: #3b82f6;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Universitet va GPA uchun maxsus blok */
+        .stats-table {
+            width: 100%;
+            background-color: #f1f5f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .stat-cell {
+            font-size: 11px;
+            color: #475569;
+        }
+        .stat-value {
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 12px;
+        }
+
+        /* Bo'limlar */
+        h2 {
+            font-size: 16px;
+            background-color: #1e3a8a;
+            color: white;
+            padding: 5px 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Tajriba va Loyihalar */
+        .content-box {
+            margin-bottom: 15px;
+            padding-left: 5px;
+        }
+        .title-row {
+            display: block;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 5px;
+        }
+        .main-title {
+            font-weight: bold;
+            font-size: 14px;
+            color: #1e3a8a;
+        }
+        .date-text {
+            float: right;
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* Yutuqlar va Sertifikatlar (Grid ko'rinishida) */
+        .achievement-item {
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+        .bullet {
+            color: #3b82f6;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 9px;
+            color: #94a3b8;
+            margin-top: 30px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="academic-header">
+        <div class="name">{{ profile.ism }} {{ profile.familiya }}</div>
+        <div class="student-status">{{ profile.university }} // {{ profile.fakultet }}</div>
+        <div style="font-size: 11px; margin-top: 5px; color: #64748b;">
+            {{ profile.manzil }} | {% for s in profile.tarmoqlari.all %}{{ s.nomi }}: {{ s.manzil }} | {% endfor %}
+        </div>
+    </div>
+
+    <table class="stats-table">
+        <tr>
+            <td class="stat-cell">Kurs: <span class="stat-value">{{ profile.kurs }}</span></td>
+            <td class="stat-cell" style="text-align: center;">GPA: <span class="stat-value">{{ profile.gpa }}</span></td>
+            <td class="stat-cell" style="text-align: right;">Sohasi: <span class="stat-value">{{ profile.ish_sohasi|default:"Computer Engineering" }}</span></td>
+        </tr>
+    </table>
+
+    {% if profile.bio_text %}
+    <h2>Summary</h2>
+    <div class="content-box" style="font-size: 11px; text-align: justify;">
+        {{ profile.bio_text }}
+    </div>
+    {% endif %}
+
+    <h2>Akademik Loyihalar</h2>
+    {% for proj in projects %}
+    <div class="content-box">
+        <div class="title-row">
+            <span class="main-title">{{ proj.nomi }}</span>
+            <span class="date-text">Status: {{ proj.get_status_display }}</span>
+        </div>
+        <div style="font-size: 11px; color: #475569;">{{ proj.tavsif|truncatechars:180 }}</div>
+    </div>
+    {% endfor %}
+
+    <h2>Ish Faoliyati</h2>
+    {% for job in experiences %}
+    <div class="content-box">
+        <div class="title-row">
+            <span class="main-title">{{ job.lavozim }} — {{ job.kompaniya }}</span>
+            <span class="date-text">{{ job.boshlangan_sana|date:"Y" }} - {{ job.tugatilgan_sana|date:"Y"|default:"Hozir" }}</span>
+        </div>
+        <div style="font-size: 11px;">{{ job.tavsif }}</div>
+    </div>
+    {% endfor %}
+
+    <h2>Sertifikatlar & Yutuqlar</h2>
+    {% for cert in certificates %}
+    <div class="achievement-item">
+        <span class="bullet">►</span> <strong>{{ cert.nomi }}</strong> — {{ cert.bergan_tashkilot }} ({{ cert.olingan_sana|date:"Y" }})
+    </div>
+    {% endfor %}
+
+    <div class="footer-note">
+        Ushbu rezyume TATU (TUIT) talabasi {{ profile.ism }} {{ profile.familiya }} uchun AcoderM tizimi orqali shakllantirildi.
+    </div>
+
+</body>
+</html>

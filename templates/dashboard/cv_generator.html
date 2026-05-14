@@ -1,0 +1,280 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* 1. ASIMMETRIK KARTALAR */
+    .fancy-card {
+        cursor: pointer;
+        background: #ffffff;
+        border: 2px solid #f1f5f9;
+        border-radius: 30px 10px 30px 10px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        position: relative;
+        margin-bottom: 5px;
+    }
+
+    .fancy-card:hover {
+        transform: rotate(-1deg) scale(1.02);
+        border-color: #4361ee;
+    }
+
+    /* Tanlangan holat */
+    .fancy-card.active {
+        background: #4361ee;
+        border-radius: 10px 30px 10px 30px;
+        border-color: #4361ee;
+        color: white !important;
+        box-shadow: 0 10px 20px rgba(67, 97, 238, 0.15);
+    }
+
+    /* Yashirin checkboxlar */
+    .fancy-card input, .design-blob input {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    /* 2. 5 TA DIZAYN BLOB (Checkboxsiz) */
+    .design-blob {
+        cursor: pointer;
+        padding: 15px;
+        border-radius: 24px;
+        background: #f8fafc;
+        border: 2px solid transparent;
+        display: flex;
+        align-items: center;
+        transition: 0.3s;
+        margin-bottom: 12px;
+    }
+
+    .design-blob.active {
+        background: #ffffff;
+        border-color: #4361ee;
+        transform: translateX(10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .blob-icon {
+        width: 40px; height: 40px;
+        border-radius: 14px;
+        display: flex; align-items: center; justify-content: center;
+        margin-right: 15px;
+        font-size: 20px;
+    }
+
+    /* 3. GRID & LAYOUT */
+    .dual-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .scroll-container {
+        height: 500px;
+        overflow-y: auto;
+        padding: 15px 10px 15px 5px;
+    }
+
+    /* Bo'limlar Counteri */
+    .section-counter {
+        background: rgba(67, 97, 238, 0.1);
+        color: #4361ee;
+        font-weight: 800;
+        padding: 2px 10px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        margin-left: auto;
+    }
+
+    .active .section-counter {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #4361ee !important;
+        box-shadow: 0 8px 15px rgba(67, 97, 238, 0.2);
+    }
+</style>
+
+<div class="container-fluid py-4">
+<div class="container-fluid py-4">
+    <form action="{% url 'generate_cv' %}" method="POST">
+        {% csrf_token %}  <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="ultra-glass-card shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3 class="fw-900 mb-0">CV <span class="text-primary">Constructor</span></h3>
+                            <p class="text-muted small">Kerakli bloklarni tanlang va shaklini o'zgartiring</p>
+                        </div>
+                        <div class="bg-primary text-white rounded-pill px-4 py-2 fw-bold">
+                            Total: <span id="selected-total">0</span>
+                        </div>
+                    </div>
+
+                    <ul class="nav nav-pills mb-4 bg-light p-1 rounded-pill" id="cvTabs" role="tablist">
+                        <li class="nav-item flex-fill">
+                            <button class="nav-link active rounded-pill fw-bold py-2" id="work-tab" data-bs-toggle="pill" data-bs-target="#tab-work" type="button">Ish</button>
+                        </li>
+                        <li class="nav-item flex-fill">
+                            <button class="nav-link rounded-pill fw-bold py-2" id="project-tab" data-bs-toggle="pill" data-bs-target="#tab-project" type="button">Loyihalar</button>
+                        </li>
+                        <li class="nav-item flex-fill">
+                            <button class="nav-link rounded-pill fw-bold py-2" id="cert-tab" data-bs-toggle="pill" data-bs-target="#tab-cert" type="button">Sertifikatlar</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content scroll-container">
+                        <div class="tab-pane fade show active" id="tab-work" role="tabpanel">
+                            <div class="dual-grid">
+                                {% for job in experiences %}
+                                <label class="fancy-card" id="job-card-{{ job.id }}">
+                                    <input type="checkbox" name="jobs" value="{{ job.id }}" onchange="magicUpdate(this, 'job-card-{{ job.id }}')">
+                                    <div class="bg-light p-2 rounded-circle me-3"><i class="bi bi-briefcase text-primary"></i></div>
+                                    <div class="overflow-hidden me-2">
+                                        <div class="fw-800 small text-truncate">{{ job.lavozim }}</div>
+                                        <div class="text-muted extra-small">{{ job.kompaniya }}</div>
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-project" role="tabpanel">
+                            <div class="dual-grid">
+                                {% for proj in projects %}
+                                <label class="fancy-card" id="proj-card-{{ proj.id }}">
+                                    <input type="checkbox" name="projects" value="{{ proj.id }}" onchange="magicUpdate(this, 'proj-card-{{ proj.id }}')">
+                                    <div class="bg-light p-2 rounded-circle me-3"><i class="bi bi-rocket-takeoff text-success"></i></div>
+                                    <div class="fw-800 small text-truncate">{{ proj.nomi }}</div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-cert" role="tabpanel">
+                            <div class="dual-grid">
+                                {% for cert in certificates %}
+                                <label class="fancy-card" id="cert-card-{{ cert.id }}">
+                                    <input type="checkbox" name="certs" value="{{ cert.id }}" onchange="magicUpdate(this, 'cert-card-{{ cert.id }}')">
+                                    <div class="bg-light p-2 rounded-circle me-3"><i class="bi bi-patch-check text-warning"></i></div>
+                                    <div class="fw-800 small text-truncate">{{ cert.nomi }}</div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="ultra-glass-card sticky-top" style="top: 20px;">
+                    <h5 class="fw-900 mb-4 text-dark">Dizaynni tanlang</h5>
+
+                    <div class="design-list">
+                        <label class="design-blob active" id="d_modern">
+                            <input type="radio" name="template" value="modern" checked onchange="setDesign('d_modern')">
+                            <div class="blob-icon bg-primary text-white"><i class="bi bi-grid-1x2"></i></div>
+                            <div>
+                                <span class="fw-800 small d-block text-dark">Modern Glass</span>
+                                <span class="extra-small text-muted">Zamonaviy va yorqin</span>
+                            </div>
+                        </label>
+
+                        <label class="design-blob" id="d_minimal">
+                            <input type="radio" name="template" value="minimal" onchange="setDesign('d_minimal')">
+                            <div class="blob-icon bg-dark text-white"><i class="bi bi-list"></i></div>
+                            <div>
+                                <span class="fw-800 small d-block text-dark">Minimal ATS</span>
+                                <span class="extra-small text-muted">Qat'iy va rasmiy</span>
+                            </div>
+                        </label>
+
+                        <label class="design-blob" id="d_cyber">
+                            <input type="radio" name="template" value="cyber" onchange="setDesign('d_cyber')">
+                            <div class="blob-icon bg-info text-white"><i class="bi bi-cpu"></i></div>
+                            <div>
+                                <span class="fw-800 small d-block text-dark">Cyberpunk</span>
+                                <span class="extra-small text-muted">Neon va texnologik</span>
+                            </div>
+                        </label>
+
+                        <label class="design-blob" id="d_elegant">
+                            <input type="radio" name="template" value="elegant" onchange="setDesign('d_elegant')">
+                            <div class="blob-icon bg-warning text-white"><i class="bi bi-gem"></i></div>
+                            <div>
+                                <span class="fw-800 small d-block text-dark">Royal Gold</span>
+                                <span class="extra-small text-muted">Premium va hashamatli</span>
+                            </div>
+                        </label>
+
+                        <label class="design-blob" id="d_academic">
+                            <input type="radio" name="template" value="academic" onchange="setDesign('d_academic')">
+                            <div class="blob-icon bg-success text-white"><i class="bi bi-mortarboard"></i></div>
+                            <div>
+                                <span class="fw-800 small d-block text-dark">TUIT Special</span>
+                                <span class="extra-small text-muted">Akademik uslubda</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="mt-4 p-3 bg-light rounded-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-muted">Tanlangan ish:</span>
+                            <span id="cnt-jobs" class="fw-bold text-primary">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="small text-muted">Loyihalar:</span>
+                            <span id="cnt-projs" class="fw-bold text-success">0</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="small text-muted">Sertifikatlar:</span>
+                            <span id="cnt-certs" class="fw-bold text-warning">0</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 mt-3 rounded-pill fw-900 shadow-lg border-0">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i> PDF YUKLAB OLISH
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Tablar ishlamayotgan bo'lsa, Bootstrap-ni qayta chaqirish shart emas,
+    // lekin ID va data-atributlar mosligini tekshirish kerak.
+
+    function magicUpdate(checkbox, cardId) {
+        const card = document.getElementById(cardId);
+        if(checkbox.checked) {
+            card.classList.add('active');
+        } else {
+            card.classList.remove('active');
+        }
+
+        // Countlarni yangilash
+        const jobs = document.querySelectorAll('input[name="jobs"]:checked').length;
+        const projs = document.querySelectorAll('input[name="projects"]:checked').length;
+        const certs = document.querySelectorAll('input[name="certs"]:checked').length;
+
+        document.getElementById('cnt-jobs').innerText = jobs;
+        document.getElementById('cnt-projs').innerText = projs;
+        document.getElementById('cnt-certs').innerText = certs;
+        document.getElementById('selected-total').innerText = jobs + projs + certs;
+    }
+
+    function setDesign(id) {
+        // Hammasidan activeni olib tashlash
+        document.querySelectorAll('.design-blob').forEach(b => b.classList.remove('active'));
+        // Tanlanganiga qo'shish
+        document.getElementById(id).classList.add('active');
+    }
+</script>
+{% endblock %}

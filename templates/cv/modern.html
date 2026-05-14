@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+@page { size: A4; margin: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'DejaVu Sans', Arial, sans-serif;
+    width: 210mm;
+    min-height: 297mm;
+    background: #fff;
+    color: #1e293b;
+    font-size: 9px;
+}
+
+/* ═══════════════════════════════
+   PAGE — table layout (most reliable in WeasyPrint)
+═══════════════════════════════ */
+.page {
+    width: 210mm;
+    min-height: 297mm;
+    display: table;
+    table-layout: fixed;
+}
+.sidebar {
+    display: table-cell;
+    width: 62mm;
+    vertical-align: top;
+    background: #0f172a;
+}
+.main-col {
+    display: table-cell;
+    width: 148mm;
+    vertical-align: top;
+    background: #f8f7f4;
+    padding: 30px 22px 24px;
+}
+
+/* ═══════════════════════════════
+   SIDEBAR — HERO
+═══════════════════════════════ */
+.s-hero {
+    background: linear-gradient(160deg, #c9a03a 0%, #a07828 100%);
+    padding: 26px 14px 24px;
+    text-align: center;
+}
+.av-wrap {
+    width: 78px; height: 78px;
+    border-radius: 12px;
+    border: 3px solid rgba(255,255,255,0.55);
+    overflow: hidden;
+    margin: 0 auto 11px;
+    background: rgba(255,255,255,0.15);
+}
+.av-wrap img { width: 78px; height: 78px; object-fit: cover; display: block; }
+.s-fullname {
+    font-size: 12.5px; font-weight: 800;
+    color: #0f172a; line-height: 1.3; margin-bottom: 4px;
+}
+.s-jobtitle {
+    font-size: 6px; font-weight: 700;
+    color: rgba(15,23,42,0.6);
+    letter-spacing: 2px; text-transform: uppercase;
+}
+.s-arrow {
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 7px solid #a07828;
+    margin: 0 auto;
+}
+
+/* SIDEBAR BODY */
+.s-body { padding: 18px 14px 14px; }
+.s-blk  { margin-bottom: 15px; }
+.s-ttl {
+    font-size: 5.5px; font-weight: 800; letter-spacing: 2.5px;
+    text-transform: uppercase; color: #c9a03a;
+    padding-bottom: 4px; margin-bottom: 7px;
+    border-bottom: 1px solid rgba(201,160,58,0.3);
+}
+.cr { margin-bottom: 6px; }
+.cr-lbl {
+    font-size: 5.5px; font-weight: 700;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    display: block; margin-bottom: 1px;
+}
+.cr-val { font-size: 7.5px; color: rgba(255,255,255,0.85); line-height: 1.5; word-break: break-word; }
+.soc-row { margin-bottom: 6px; }
+.soc-name {
+    font-size: 5.5px; font-weight: 700; color: #c9a03a;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    display: block; margin-bottom: 1px;
+}
+.soc-url { font-size: 7.5px; color: rgba(255,255,255,0.65); word-break: break-all; line-height: 1.4; }
+.edu-uni { font-size: 9px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.edu-sub { font-size: 7.5px; color: rgba(255,255,255,0.55); line-height: 1.6; }
+.gpa-pill {
+    display: inline-block; margin-top: 5px;
+    background: #c9a03a; color: #0f172a;
+    font-size: 7px; font-weight: 800;
+    padding: 2px 8px; border-radius: 20px; letter-spacing: 1px;
+}
+.bio-p { font-size: 7.5px; color: rgba(255,255,255,0.55); line-height: 1.7; text-align: justify; }
+
+/* ═══════════════════════════════
+   MAIN HEADER
+═══════════════════════════════ */
+.m-hdr {
+    margin-bottom: 16px; padding-bottom: 10px;
+    border-bottom: 2.5px solid #0f172a; position: relative;
+}
+.m-hdr::after {
+    content: ''; position: absolute; bottom: -2.5px; left: 0;
+    width: 38px; height: 5px; background: #c9a03a;
+}
+.m-name {
+    font-size: 25px; font-weight: 200; color: #0f172a;
+    line-height: 1; letter-spacing: -0.5px; margin-bottom: 4px;
+}
+.m-name b { font-weight: 800; }
+.m-role { font-size: 7px; color: #64748b; letter-spacing: 3.5px; text-transform: uppercase; }
+
+/* SECTION HEADING */
+.sec { margin-bottom: 13px; }
+.sec-hd { margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px solid #dde3ea; }
+.sec-hd-txt {
+    font-size: 7px; font-weight: 800; color: #0f172a;
+    letter-spacing: 2.5px; text-transform: uppercase;
+}
+.sec-hd-acc {
+    display: inline-block; width: 10px; height: 3px;
+    background: #c9a03a; border-radius: 2px;
+    margin-right: 5px; position: relative; top: -1px;
+}
+
+/* ═══════════════════════════════
+   EXPERIENCE CARD (no logo image)
+═══════════════════════════════ */
+.exp-item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.exp-item:last-child { margin-bottom: 0; }
+
+/* Banner — flex layout, no floats */
+.exp-banner { padding: 9px 11px; border-bottom: 1px solid #eef0f4; }
+.exp-meta { width: 100%; }
+.exp-pos { font-size: 10px; font-weight: 800; color: #0f172a; line-height: 1.25; margin-bottom: 5px; }
+.exp-bottom-row { display: flex; align-items: center; justify-content: space-between; }
+.exp-badge {
+    font-size: 5.5px; font-weight: 800; color: #fff; background: #334155;
+    border-radius: 3px; padding: 2px 6px; letter-spacing: 0.4px; text-transform: uppercase;
+    flex-shrink: 0;
+}
+.exp-company { font-size: 8.5px; font-weight: 700; color: #c9a03a; }
+
+/* Date strip — flex layout */
+.exp-dates-row { padding: 5px 11px; background: #fafafa; border-bottom: 1px solid #eef0f4;
+    display: flex; align-items: center; justify-content: space-between; }
+.exp-period-block { }
+.exp-period-lbl {
+    font-size: 5.5px; font-weight: 800; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 1.3px;
+    display: block; margin-bottom: 2px;
+}
+.exp-period-val { font-size: 8.5px; font-weight: 700; }
+.d-start { color: #c9a03a; }
+.d-arr   { color: #94a3b8; padding: 0 4px; }
+.d-end   { color: #475569; }
+.exp-tag-block { }
+.tag-current {
+    display: inline-block; font-size: 6.5px; font-weight: 800;
+    color: #15803d; background: #dcfce7; border-radius: 8px; padding: 2px 8px;
+}
+.tag-years {
+    display: inline-block; font-size: 6.5px; font-weight: 700;
+    color: #475569; background: #e2e8f0; border-radius: 8px; padding: 2px 8px;
+}
+
+/* Body */
+.exp-body { padding: 7px 11px 9px; }
+.exp-desc { font-size: 8px; color: #64748b; line-height: 1.65; }
+
+/* ═══════════════════════════════
+   PROJECT CARD (no image)
+═══════════════════════════════ */
+.proj-item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.proj-item:last-child { margin-bottom: 0; }
+
+/* Top: full width info, no image float */
+.proj-top { padding: 8px 10px; border-bottom: 1px solid #eef0f4; }
+
+.proj-name-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 3px; }
+.proj-name-txt {
+    font-size: 9.5px; font-weight: 800; color: #0f172a; line-height: 1.3;
+    flex: 1; margin-right: 6px;
+}
+.proj-status-badge {
+    float: right;
+    font-size: 5.5px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 2px 7px; border-radius: 8px; margin-top: 1px;
+}
+.status-active   { background: #dcfce7; color: #15803d; }
+.status-inactive { background: #f1f5f9; color: #64748b; }
+.status-pending  { background: #fef9c3; color: #92400e; }
+.proj-desc-txt   { font-size: 7.5px; color: #64748b; line-height: 1.6; clear: both; }
+
+/* Meta bar */
+.proj-meta-row { display: flex; align-items: flex-start; justify-content: space-between; padding: 5px 10px; background: #fafafa; }
+.proj-links-f { flex: 1; }
+.proj-stats-f { text-align: right; flex-shrink: 0; }
+.proj-link-row { margin-bottom: 2px; }
+.proj-link-row:last-child { margin-bottom: 0; }
+.proj-link-lbl {
+    font-size: 5.5px; font-weight: 800; color: #334155;
+    text-transform: uppercase; letter-spacing: 0.5px; margin-right: 3px;
+}
+.proj-link-url { font-size: 7px; color: #c9a03a; text-decoration: underline; word-break: break-all; }
+.proj-stat-line { font-size: 6.5px; color: #94a3b8; display: block; line-height: 1.6; }
+.proj-stat-line b { color: #475569; font-weight: 700; }
+
+/* ═══════════════════════════════
+   CERTIFICATE CARD (no proof badge)
+═══════════════════════════════ */
+.cert-item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+.cert-item:last-child { margin-bottom: 0; }
+
+.cert-head { padding: 9px 11px; border-bottom: 1px solid #eef0f4; overflow: hidden; }
+.cert-yr-f {
+    float: left;
+    width: 44px; height: 44px;
+    border-radius: 8px; background: #c9a03a;
+    text-align: center; margin-right: 10px;
+    padding-top: 7px;
+}
+.cert-yr-num { display: block; font-size: 14px; font-weight: 900; color: #0f172a; line-height: 1; }
+.cert-yr-mo  { display: block; font-size: 6px; font-weight: 800; color: rgba(15,23,42,0.6); text-transform: uppercase; letter-spacing: 0.8px; }
+.cert-info-f { overflow: hidden; padding-top: 3px; }
+.cert-name   { font-size: 10px; font-weight: 800; color: #0f172a; line-height: 1.25; margin-bottom: 3px; }
+.cert-org    { font-size: 7.5px; color: #64748b; }
+
+/* Strip — dates only, no proof badge */
+.cert-strip  { padding: 5px 11px; background: #fafafa; display: flex; align-items: center; }
+.cert-dates-f { display: flex; }
+.cert-date-blk { display: inline-block; margin-right: 14px; vertical-align: top; }
+.cert-date-lbl {
+    display: block; font-size: 5.5px; font-weight: 800; color: #94a3b8;
+    text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 1px;
+}
+.cert-date-val { font-size: 8px; font-weight: 700; color: #334155; }
+
+/* FOOTER */
+.cv-foot {
+    margin-top: 13px; padding-top: 7px;
+    border-top: 1px solid #e2e8f0;
+    text-align: center; font-size: 5.5px; color: #94a3b8;
+    letter-spacing: 2px; text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <div class="sidebar">
+        <div class="s-hero">
+            <div class="av-wrap">
+                <img src="{{ profile.avatar.name }}" alt="">
+            </div>
+            <div class="s-fullname">{{ profile.ism }} {{ profile.familiya }}</div>
+            <div class="s-jobtitle">{{ profile.ish_sohasi|default:"Professional" }}</div>
+        </div>
+        <div class="s-arrow"></div>
+
+        <div class="s-body">
+
+            <div class="s-blk">
+                <div class="s-ttl">Contact</div>
+                {% if profile.manzil %}
+                <div class="cr">
+                    <span class="cr-lbl">Location</span>
+                    <span class="cr-val">{{ profile.manzil }}</span>
+                </div>
+                {% endif %}
+                {% if profile.user.email %}
+                <div class="cr">
+                    <span class="cr-lbl">Email</span>
+                    <span class="cr-val">{{ profile.user.email }}</span>
+                </div>
+                {% endif %}
+                {% for social in profile.tarmoqlari.all %}
+                <div class="soc-row">
+                    <span class="soc-name">{{ social.nomi }}</span>
+                    <span class="soc-url">{{ social.manzil }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if profile.university %}
+            <div class="s-blk">
+                <div class="s-ttl">Education</div>
+                <div class="edu-uni">{{ profile.university }}</div>
+                <div class="edu-sub">
+                    {% if profile.fakultet %}{{ profile.fakultet }}<br>{% endif %}
+                    {% if profile.kurs %}Year {{ profile.kurs }}{% endif %}
+                </div>
+                {% if profile.gpa %}<span class="gpa-pill">GPA: {{ profile.gpa }}</span>{% endif %}
+            </div>
+            {% endif %}
+
+            {% if profile.bio_text %}
+            <div class="s-blk">
+                <div class="s-ttl">About Me</div>
+                <p class="bio-p">{{ profile.bio_text|truncatechars:280 }}</p>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- ═══ MAIN ═══ -->
+    <div class="main-col">
+
+        <div class="m-hdr">
+            <div class="m-name">{{ profile.ism }} <b>{{ profile.familiya }}</b></div>
+            <div class="m-role">{{ profile.ish_sohasi|default:"Professional" }}</div>
+        </div>
+
+        <!-- WORK EXPERIENCE -->
+        {% if experiences %}
+        <div class="sec">
+            <div class="sec-hd">
+                <span class="sec-hd-txt"><span class="sec-hd-acc"></span>Work Experience</span>
+            </div>
+
+            {% for job in experiences %}
+            <div class="exp-item">
+
+                <!-- Banner: rasm yo'q, to'liq kenglikda meta -->
+                <div class="exp-banner">
+                    <div class="exp-meta">
+                        <div class="exp-pos">{{ job.lavozim }}</div>
+                        <div class="exp-bottom-row">
+                            <span class="exp-badge">{{ job.get_ish_turi_display }}</span>
+                            <span class="exp-company">{{ job.kompaniya }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exp-dates-row">
+                    <div class="exp-period-block">
+                        <span class="exp-period-lbl">Period</span>
+                        <span class="exp-period-val">
+                            <span class="d-start">{{ job.boshlangan_sana|date:"d M Y" }}</span>
+                            <span class="d-arr">&#8594;</span>
+                            <span class="d-end">{% if job.tugatilgan_sana %}{{ job.tugatilgan_sana|date:"d M Y" }}{% else %}Present{% endif %}</span>
+                        </span>
+                    </div>
+                    <div class="exp-tag-block">
+                        {% if not job.tugatilgan_sana %}
+                        <span class="tag-current">&#9679; Current</span>
+                        {% else %}
+                        <span class="tag-years">{{ job.boshlangan_sana|date:"Y" }} – {{ job.tugatilgan_sana|date:"Y" }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if job.tavsif %}
+                <div class="exp-body">
+                    <div class="exp-desc">{{ job.tavsif }}</div>
+                </div>
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- PROJECTS -->
+        {% if projects %}
+        <div class="sec">
+            <div class="sec-hd">
+                <span class="sec-hd-txt"><span class="sec-hd-acc"></span>Projects</span>
+            </div>
+
+            {% for proj in projects %}
+            <div class="proj-item">
+
+                <!-- Top: rasm yo'q, to'liq kenglik -->
+                <div class="proj-top">
+                    <div class="proj-name-row">
+                        <div class="proj-name-txt">{{ proj.nomi }}</div>
+                        <span class="proj-status-badge status-{{ proj.status }}">{{ proj.get_status_display }}</span>
+                    </div>
+                    {% if proj.tavsif %}
+                    <div class="proj-desc-txt">{{ proj.tavsif|truncatechars:115 }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="proj-meta-row">
+                    <div class="proj-links-f">
+                        {% if proj.github_link %}
+                        <div class="proj-link-row">
+                            <span class="proj-link-lbl">GitHub:</span>
+                            <span class="proj-link-url">{{ proj.github_link }}</span>
+                        </div>
+                        {% endif %}
+                        {% if proj.live_link %}
+                        <div class="proj-link-row">
+                            <span class="proj-link-lbl">Live:</span>
+                            <span class="proj-link-url">{{ proj.live_link }}</span>
+                        </div>
+                        {% endif %}
+                        {% if proj.video %}
+                        <div class="proj-link-row">
+                            <span class="proj-link-lbl">Video:</span>
+                            <span class="proj-link-url">{{ proj.video }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="proj-stats-f">
+                        <span class="proj-stat-line">Uploaded: <b>{{ proj.yaratilgan_sana|date:"d M Y" }}</b></span>
+                        <span class="proj-stat-line">Views: <b>{{ proj.korishlar_soni }}</b></span>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- CERTIFICATES -->
+        {% if certificates %}
+        <div class="sec">
+            <div class="sec-hd">
+                <span class="sec-hd-txt"><span class="sec-hd-acc"></span>Certifications</span>
+            </div>
+
+            {% for cert in certificates %}
+            <div class="cert-item">
+
+                <div class="cert-head">
+                    <div class="cert-yr-f">
+                        <span class="cert-yr-num">{{ cert.olingan_sana|date:"y" }}</span>
+                        <span class="cert-yr-mo">{{ cert.olingan_sana|date:"M" }}</span>
+                    </div>
+                    <div class="cert-info-f">
+                        <div class="cert-name">{{ cert.nomi }}</div>
+                        {% if cert.bergan_tashkilot %}
+                        <div class="cert-org">{{ cert.bergan_tashkilot }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Strip: faqat sana ma'lumotlari, isbot badge yo'q -->
+                <div class="cert-strip">
+                    <div class="cert-dates-f">
+                        <span class="cert-date-blk">
+                            <span class="cert-date-lbl">Issued</span>
+                            <span class="cert-date-val">{{ cert.olingan_sana|date:"d M Y" }}</span>
+                        </span>
+                        <span class="cert-date-blk">
+                            <span class="cert-date-lbl">Uploaded</span>
+                            <span class="cert-date-val">{{ cert.yuklash_sanasi|date:"d M Y" }}</span>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="cv-foot">
+            Curriculum Vitae &nbsp;&middot;&nbsp; {{ profile.ism }} {{ profile.familiya }} &nbsp;&middot;&nbsp; Portfolio System
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

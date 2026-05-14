@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* PDF sahifa sozlamalari */
+        @page {
+            size: A4;
+            margin: 45px;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif; /* ATS uchun eng xavfsiz shrift */
+            color: #000;
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        /* Sarlavha qismi */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+        .name {
+            font-size: 26px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        .contact-info {
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bo'limlar */
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            background-color: #f2f2f2;
+            padding: 3px 10px;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #000;
+        }
+
+        /* Ish va Ta'lim satrlari */
+        .row {
+            display: block;
+            width: 100%;
+            margin-bottom: {% if experiences|length > 4 %}5px{% else %}12px{% endif %};
+        }
+        .col-main {
+            font-weight: bold;
+            font-size: 13px;
+            float: left;
+        }
+        .col-date {
+            float: right;
+            font-size: 12px;
+            font-weight: normal;
+        }
+        .sub-row {
+            clear: both;
+            font-style: italic;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        /* Tavsiflar */
+        .description {
+            font-size: {% if experiences|length > 5 or projects|length > 6 %}10px{% else %}11px{% endif %};
+            text-align: justify;
+            margin-top: 3px;
+        }
+
+        /* Loyihalar va Sertifikatlar (Nuqtali ro'yxat) */
+        ul {
+            margin-top: 5px;
+            padding-left: 20px;
+        }
+        li {
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="name">{{ profile.ism }} {{ profile.familiya }}</div>
+        <div class="contact-info">
+            {{ profile.manzil }} | {{ profile.university }} | GPA: {{ profile.gpa }}
+        </div>
+        <div class="contact-info">
+            {% for social in profile.tarmoqlari.all %}
+                {{ social.nomi }}: {{ social.manzil }} {% if not forloop.last %}|{% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="section-title">Ta'lim</div>
+    <div class="row">
+        <span class="col-main">{{ profile.university }}</span>
+        <span class="col-date">{{ profile.kurs }}-kurs talabasi</span>
+    </div>
+    <div class="sub-row">{{ profile.fakultet }} fakulteti</div>
+
+    <div class="section-title">Ish Tajribasi</div>
+    {% for job in experiences %}
+    <div class="row">
+        <div class="row-header">
+            <span class="col-main">{{ job.lavozim }} | {{ job.kompaniya }}</span>
+            <span class="col-date">{{ job.boshlangan_sana|date:"M Y" }} – {{ job.tugatilgan_sana|date:"M Y"|default:"Hozir" }}</span>
+        </div>
+        <div class="clear"></div>
+        <div class="description">
+            {{ job.tavsif }}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="section-title">Loyihalar</div>
+    <ul>
+        {% for proj in projects %}
+        <li>
+            <strong>{{ proj.nomi }}</strong>: {{ proj.tavsif|truncatechars:200 }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="section-title">Sertifikatlar va Yutuqlar</div>
+    <ul>
+        {% for cert in certificates %}
+        <li>
+            <strong>{{ cert.nomi }}</strong> — {{ cert.bergan_tashkilot }} ({{ cert.olingan_sana|date:"Y" }})
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% if profile.bio_text %}
+    <div class="section-title">Qisqacha Ma'lumot</div>
+    <div class="description">
+        {{ profile.bio_text }}
+    </div>
+    {% endif %}
+
+</body>
+</html>
