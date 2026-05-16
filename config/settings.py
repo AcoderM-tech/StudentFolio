@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',  # Supabase Storage (S3) bilan ishlash uchun qo'shildi
     'mainapp',
 ]
 
@@ -51,6 +52,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# DATABASES configuration
+# Eslatma: Agar Render'da PostgreSQL ulamoqchi bo'lsangiz, DATABASE_URL ni shu yerga sozlash kerak bo'ladi.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -72,13 +75,27 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'mainapp.Users'
 
+# --- STATIC FILES CONFIGURATION (WhiteNoise) ---
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# --- MEDIA & SUPABASE S3 STORAGE CONFIGURATION ---
+AWS_ACCESS_KEY_ID = os.environ.get('SUPABASE_S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.environ.get('SUPABASE_S3_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('SUPABASE_BUCKET')
+AWS_S3_ENDPOINT_URL = os.environ.get('SUPABASE_S3_ENDPOINT')
+
+# Agar Render'da barcha kerakli S3 kalitlari kiritilgan bo'lsa, Supabase ishlaydi
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME and AWS_S3_ENDPOINT_URL:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    AWS_QUERYSTRING_AUTH = False  # Rasmlar havolasi doimiy aktiv turishi uchun
+else:
+    # Mahalliy kompyuterda (Local-da) ishlash uchun eski media sozlamasi
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CSRF_TRUSTED_ORIGINS = ['https://studentfolio.onrender.com']
 
