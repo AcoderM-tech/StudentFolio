@@ -82,21 +82,20 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ── Media fayllar: Umumiy sozlamalar (Urls.py muammosiz topishi uchun) ──────
+# ── Media fayllar: Umumiy sozlamalar ────────────────────────────────────────
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# ── Supabase S3 Storage konfiguratsiyasi ─────────────────────────────────────
+# Supabase S3 muhit o'zgaruvchilari
 AWS_ACCESS_KEY_ID = os.environ.get('SUPABASE_S3_ACCESS_KEY')
 AWS_SECRET_ACCESS_KEY = os.environ.get('SUPABASE_S3_SECRET_KEY')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('SUPABASE_BUCKET')
 AWS_S3_ENDPOINT_URL = os.environ.get('SUPABASE_S3_ENDPOINT')
 
-# Agar barcha S3 kalitlari kiritilgan bo'lsa (Render serverida), unga ulaymiz
-if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME and AWS_S3_ENDPOINT_URL:
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    AWS_S3_SIGNATURE_VERSION = 's3v4'
-    AWS_QUERYSTRING_AUTH = False
-
+# Shartni olib tashlab, majburlab S3 storageni ishlatamiz
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+AWS_QUERYSTRING_AUTH = False
 CSRF_TRUSTED_ORIGINS = ['https://studentfolio.onrender.com']
 
 if not DEBUG:
