@@ -19,8 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary_storage',
-    'cloudinary',
+    'storages',  # Supabase S3 Storage uchun shart
     'mainapp',
 ]
 
@@ -55,9 +54,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ── Database: PostgreSQL (Render) yoki SQLite (local) ──────────────────────
+# Eslatma: dj_database_url orqali SQLite f-string formati tekshiriladi
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL', f'sqlite:///{BASE_DIR / "db.sqlite3"}'),
+        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
         conn_max_age=600,
     )
 }
@@ -76,23 +76,26 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'mainapp.Users'
 
-# ── Static fayllar ──────────────────────────────────────────────────────────
+# ── Static fayllar (WhiteNoise) ─────────────────────────────────────────────
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# ── Media fayllar: Cloudinary ───────────────────────────────────────────────
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', ''),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY', ''),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', ''),
-}
+# ── Media fayllar: Supabase S3 Storage ──────────────────────────────────────
+AWS_ACCESS_KEY_ID = os.environ.get('SUPABASE_S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.environ.get('SUPABASE_S3_SECRET_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('SUPABASE_BUCKET')
+AWS_S3_ENDPOINT_URL = os.environ.get('SUPABASE_S3_ENDPOINT')
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_STORAGE_BUCKET_NAME and AWS_S3_ENDPOINT_URL:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    AWS_S3_SIGNATURE_VERSION = 's3v4'
+    AWS_QUERYSTRING_AUTH = False
+else:
+    # Mahalliy kompyuterda ishlashi uchun fallback
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 CSRF_TRUSTED_ORIGINS = ['https://studentfolio.onrender.com']
 
