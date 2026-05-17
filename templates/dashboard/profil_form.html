@@ -36,9 +36,16 @@
                         </div>
 
                         <div class="col-md-12">
-                            <label class="form-label small fw-bold text-uppercase">Universitet</label>
-                            <input type="text" name="university" class="form-control rounded-3 py-2" placeholder="Masalan: TATU" value="{{ form.university.value|default:'' }}">
-                        </div>
+    <label class="form-label small fw-bold text-uppercase">Universitet</label>
+    <select name="university" class="form-select rounded-3 py-2" required>
+        <option value="" disabled {% if not form.university %}selected{% endif %}>Universitetni tanlang...</option>
+        {% for code, name in university_choices %}
+            <option value="{{ code }}" {% if form.university == code or form.instance.university == code %}selected{% endif %}>
+                {{ name }}
+            </option>
+        {% endfor %}
+    </select>
+</div>
                         <div class="col-md-8">
                             <label class="form-label small fw-bold text-uppercase">Fakultet</label>
                             <input type="text" name="fakultet" class="form-control rounded-3 py-2" placeholder="Masalan: Kompyuter injiniringi" value="{{ form.fakultet.value|default:'' }}">
