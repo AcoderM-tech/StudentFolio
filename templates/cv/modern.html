@@ -284,9 +284,13 @@ body {
     <!-- ═══ SIDEBAR ═══ -->
     <div class="sidebar">
         <div class="s-hero">
-            <div class="av-wrap">
-                <img src="{{ profile.avatar.name }}" alt="">
-            </div>
+<div class="av-wrap">
+    {% if avatar_base64 %}
+        <img src="{{ avatar_base64 }}" alt="Profil">
+    {% else %}
+        <div style="width: 100%; height: 100%; background: rgba(255,255,255,0.2);"></div>
+    {% endif %}
+</div>
             <div class="s-fullname">{{ profile.ism }} {{ profile.familiya }}</div>
             <div class="s-jobtitle">{{ profile.ish_sohasi|default:"Professional" }}</div>
         </div>
