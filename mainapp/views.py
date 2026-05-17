@@ -82,6 +82,8 @@ def profil_form(request):
         kurs = request.POST.get('kurs')
         gpa = request.POST.get('gpa')
         avatar = request.FILES.get('avatar')
+        ish_sohasi = request.POST.get('ish_sohasi')
+        bio_text = request.POST.get('bio_text')
 
         if all([ism, familiya, university, fakultet, kurs, gpa]):
             profil, created = Profil.objects.update_or_create(
@@ -93,6 +95,8 @@ def profil_form(request):
                     'fakultet': fakultet,
                     'kurs': int(kurs) if kurs else None,
                     'gpa': float(gpa) if gpa else 0,
+                    'ish_sohasi': ish_sohasi,
+                    'bio_text': bio_text,
                 }
             )
             if avatar:
