@@ -12,7 +12,8 @@ from weasyprint import HTML
 import os
 from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect
-
+import requests
+import base64
 User = get_user_model()
 
 
@@ -386,29 +387,43 @@ def delete_certificate(request, pk):
 @login_required(login_url='/login/')
 def cv_constructor_view(request):
     user_profil = get_object_or_404(Profil, user=request.user)
+    
     if request.method == "POST":
         job_ids = request.POST.getlist('jobs')
         project_ids = request.POST.getlist('projects')
         cert_ids = request.POST.getlist('certs')
         template_name = request.POST.get('template', 'modern')
+        
         experiences = Ish_faoliyati.objects.filter(id__in=job_ids).order_by('-boshlangan_sana')
         projects = Loyihalar.objects.filter(id__in=project_ids)
         certificates = Sertifikat.objects.filter(id__in=cert_ids)
+        avatar_base64 = None
+        if user_profil.avatar:
+            try:
+                
+                image_url = user_profil.avatar.url
+                res = requests.get(image_url, timeout=5)
+                if res.status_code == 200:
+                    encoded_string = base64.b64encode(res.content).decode('utf-8')
+                    avatar_base64 = f"data:image/png;base64,{encoded_string}"
+            except Exception as e:
+                print(f"PDF uchun avatar yuklashda xatolik: {e}")
+                avatar_base64 = None
+
         context = {
             'profile': user_profil,
             'experiences': experiences,
             'projects': projects,
             'certificates': certificates,
-            'avatar_path': os.path.join(settings.MEDIA_ROOT, str(user_profil.avatar)),
-            'media_root': settings.MEDIA_ROOT,
+            'avatar_base64': avatar_base64,  
         }
+        
         html_string = render_to_string(f'cv/{template_name}.html', context)
+        
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="CV_{user_profil.ism}_{user_profil.familiya}.pdf"'
-        HTML(
-            string=html_string,
-            base_url=f"file://{settings.MEDIA_ROOT}/"
-        ).write_pdf(response)
+    
+        HTML(string=html_string).write_pdf(response)
         return response
 
     context = {
