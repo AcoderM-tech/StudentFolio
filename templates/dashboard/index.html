@@ -74,7 +74,7 @@
         margin-bottom: 0;
     }
 
-    /* 3. PROFILE & TABLE (Avvalgi Premium qismlar) */
+    /* 3. PROFILE & TABLE (Artistic Premium qismlar) */
     .profile-card-artistic {
         background: #ffffff; border-radius: 40px; overflow: hidden;
         box-shadow: 0 20px 40px rgba(0,0,0,0.06);
@@ -165,7 +165,7 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ loyiha.avatar.url }}" class="rounded-3 me-3" width="40" height="40">
+                                    <img src="{{ loyiha.avatar.url }}" class="rounded-3 me-3" width="40" height="40" style="object-fit: cover;">
                                     <span class="fw-bold">{{ loyiha.nomi }}</span>
                                 </div>
                             </td>
@@ -173,6 +173,10 @@
                             <td class="text-end">
                                 <span class="badge bg-light text-primary rounded-pill px-3 border">{{ loyiha.get_status_display }}</span>
                             </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">Hozircha loyihalar yuklanmagan.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -182,7 +186,7 @@
     </div>
 
     <div class="col-lg-4">
-        <div class="profile-card-artistic text-center pb-5">
+        <div class="profile-card-artistic text-center pb-4">
             <div class="profile-banner-art"></div>
             <div style="margin-top: -60px; position: relative; display: inline-block;">
                 <img src="{{ profil.avatar.url }}" class="profile-img-squircle">
@@ -190,21 +194,40 @@
             </div>
             <div class="mt-3 px-4">
                 <h4 class="fw-800 text-dark mb-1">{{ profil.ism }} {{ profil.familiya }}</h4>
-                <p class="text-muted small mb-4">{{ profil.university }}</p>
+                
+                {% if profil.ish_sohasi %}
+                    <p class="badge bg-light text-primary border rounded-pill px-3 py-1 mb-2 fw-bold text-uppercase" style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                        {{ profil.ish_sohasi }}
+                    </p>
+                {% else %}
+                    <p class="text-muted small mb-2">Soha kiritilmagan</p>
+                {% endif %}
+                
+                <p class="text-muted small mb-1"><i class="bi bi-bank me-1"></i> {{ profil.get_university_display }}</p>
+                <p class="text-muted small mb-3" style="font-size: 0.8rem;">{{ profil.fakultet|default:"Fakultet kiritilmagan" }}</p>
+                
+                {% if profil.bio_text %}
+                    <div class="p-3 bg-light rounded-4 mb-3 text-start">
+                        <span class="d-block text-muted small fw-bold text-uppercase mb-1" style="font-size: 0.65rem; letter-spacing: 1px;">O'zim haqimda (Bio)</span>
+                        <p class="text-secondary small mb-0" style="line-height: 1.5; font-size: 0.8rem;">{{ profil.bio_text }}</p>
+                    </div>
+                {% endif %}
+                
                 <div class="row g-2 mb-4">
                     <div class="col-6">
-                        <div class="p-3 bg-light rounded-4">
+                        <div class="p-3 bg-light rounded-4 h-100 d-flex flex-column justify-content-center">
                             <span class="d-block text-muted small">Kurs</span>
-                            <span class="fw-bold">{{ profil.kurs }}-kurs</span>
+                            <span class="fw-bold">{% if profil.kurs %}{{ profil.kurs }}-kurs{% else %}-{% endif %}</span>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="p-3 bg-light rounded-4">
+                        <div class="p-3 bg-light rounded-4 h-100 d-flex flex-column justify-content-center">
                             <span class="d-block text-muted small">ID</span>
                             <span class="fw-bold small">#{{ profil.id }}</span>
                         </div>
                     </div>
                 </div>
+                
                 <a href="{% url 'profil_form' %}" class="btn btn-primary w-100 rounded-pill py-3 fw-bold shadow-sm">
                     TAHRIRLASH
                 </a>
