@@ -23,21 +23,20 @@ class Users(AbstractUser):
 
 # ── PROFIL JADVALI ──────────────────────────────────────────────────────────
 class Profil(models.Model):
-    # O'zbekistondagi asosiy oliygohlar ro'yxati (Filtr uchun mukammal lug'at)
     class UniversityChoices(models.TextChoices):
         TUIT = 'TATU', 'Toshkent axborot texnologiyalari universiteti (TATU)'
-        MUHA = 'TDTU', 'Toshkent davlat transport universiteti (TDTU)'
+        TRANSPORT = 'TDTU_TRANS', 'Toshkent davlat transport universiteti (TDTU)'
         WIUT = 'WIUT', 'Toshkent xalqaro vestminster universiteti (WIUT)'
         INHA = 'INHA', 'Toshkent shahridagi Inha universiteti (INHA)'
         AMITY = 'AMITY', 'Toshkent shahridagi Amity universiteti'
         AKFA = 'AKFA', 'Central Asian University (AKFA)'
         NUU = 'NUU', "O'zbekiston Milliy universiteti (O'zMU)"
-        TDTU = 'TDTU', 'Toshkent davlat texnika universiteti (TDTU)'
-        TSUE = 'TDIU', 'Toshkent davlat iqtisodiyot universiteti (TDIU)'
+        TDTU = 'TDTU_TEXN', 'Toshkent davlat texnika universiteti (TDTU)'
+        TSUE = 'TSUE', 'Toshkent davlat iqtisodiyot universiteti (TDIU)'
         MDIST = 'MDIST', 'Toshkent shahridagi Singapur menejmentni rivojlantirish instituti (MDIST)'
         YODJU = 'KIUT', 'Kimyo xalqaro universiteti (KIUT)'
         BMU = 'BMU', 'British Management University (BMU)'
-        OTHER = 'boshqa', 'Boshqa oliygoh / Chet el universiteti'
+        OTHER = 'BOSHQA', 'Boshqa oliygoh / Chet el universiteti'
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     ism = models.CharField(max_length=20)
