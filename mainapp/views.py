@@ -77,7 +77,7 @@ def profil_form(request):
     if request.method == 'POST':
         ism = request.POST.get('ism')
         familiya = request.POST.get('familiya')
-        university = request.POST.get('university')
+        university = request.POST.get('university') 
         fakultet = request.POST.get('fakultet')
         kurs = request.POST.get('kurs')
         gpa = request.POST.get('gpa')
@@ -89,9 +89,9 @@ def profil_form(request):
                 defaults={
                     'ism': ism,
                     'familiya': familiya,
-                    'university': university,
+                    'university': university,  
                     'fakultet': fakultet,
-                    'kurs': kurs,
+                    'kurs': int(kurs) if kurs else None,
                     'gpa': float(gpa) if gpa else 0,
                 }
             )
@@ -102,7 +102,13 @@ def profil_form(request):
         else:
             error = "Iltimos, barcha maydonlarni to'ldiring!"
 
-    context = {'profil': profil, 'error': error}
+   
+    context = {
+        'form': profil,  
+        'profil': profil,
+        'error': error,
+        'university_choices': Profil.UniversityChoices.choices 
+    }
     return render(request, 'dashboard/profil_form.html', context)
 
 
