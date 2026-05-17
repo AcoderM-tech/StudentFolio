@@ -25,18 +25,18 @@ class Users(AbstractUser):
 class Profil(models.Model):
     # O'zbekistondagi asosiy oliygohlar ro'yxati (Filtr uchun mukammal lug'at)
     class UniversityChoices(models.TextChoices):
-        TUIT = 'tatu', 'Toshkent axborot texnologiyalari universiteti (TATU)'
-        MUHA = 'tadi', 'Toshkent davlat transport universiteti (TDTU)'
-        WIUT = 'wiut', 'Toshkent xalqaro vestminster universiteti (WIUT)'
-        INHA = 'inha', 'Toshkent shahridagi Inha universiteti (INHA)'
-        AMITY = 'amity', 'Toshkent shahridagi Amity universiteti'
-        AKFA = 'akfa', 'Central Asian University (AKFA)'
-        NUU = 'nuu', "O'zbekiston Milliy universiteti (O'zMU)"
-        TDTU = 'tdtu', 'Toshkent davlat texnika universiteti (TDTU)'
-        TSUE = 'tsue', 'Toshkent davlat iqtisodiyot universiteti (TDIU)'
-        MDIST = 'mdist', 'Toshkent shahridagi Singapur menejmentni rivojlantirish instituti (MDIST)'
-        YODJU = 'kiut', 'Kimyo xalqaro universiteti (KIUT)'
-        BMU = 'bmu', 'British Management University (BMU)'
+        TUIT = 'TATU', 'Toshkent axborot texnologiyalari universiteti (TATU)'
+        MUHA = 'TDTU', 'Toshkent davlat transport universiteti (TDTU)'
+        WIUT = 'WIUT', 'Toshkent xalqaro vestminster universiteti (WIUT)'
+        INHA = 'INHA', 'Toshkent shahridagi Inha universiteti (INHA)'
+        AMITY = 'AMITY', 'Toshkent shahridagi Amity universiteti'
+        AKFA = 'AKFA', 'Central Asian University (AKFA)'
+        NUU = 'NUU', "O'zbekiston Milliy universiteti (O'zMU)"
+        TDTU = 'TDTU', 'Toshkent davlat texnika universiteti (TDTU)'
+        TSUE = 'TDIU', 'Toshkent davlat iqtisodiyot universiteti (TDIU)'
+        MDIST = 'MDIST', 'Toshkent shahridagi Singapur menejmentni rivojlantirish instituti (MDIST)'
+        YODJU = 'KIUT', 'Kimyo xalqaro universiteti (KIUT)'
+        BMU = 'BMU', 'British Management University (BMU)'
         OTHER = 'boshqa', 'Boshqa oliygoh / Chet el universiteti'
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
