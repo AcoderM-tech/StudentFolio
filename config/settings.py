@@ -94,7 +94,7 @@ AWS_S3_REGION_NAME = os.environ.get('SUPABASE_REGION', 'eu-west-1')  # Standart 
 AWS_S3_SIGNATURE_VERSION = 's3v4'
 AWS_QUERYSTRING_AUTH = False
 AWS_DEFAULT_ACL = None
-AWS_S3_CUSTOM_DOMAIN = None
+AWS_S3_CUSTOM_DOMAIN = 'sircajupimsrndhsibsz.supabase.co/storage/v1/object/public/student-media'
 
 STORAGES = {
     "default": {
